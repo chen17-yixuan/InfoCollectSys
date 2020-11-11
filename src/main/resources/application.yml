@@ -5,9 +5,15 @@ spring:
   datasource:
     username: root
     password: 19980413.com
-    url: jdbc:mysql://localhost:3306/azc_zb_exist_error_device?useUnicode=true&characterEncoding=utf-8&useSSL=true&
+    url: jdbc:mysql://192.168.0.115:3306/azc_zb_exist_error_device?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
+
+  thymeleaf:
+    prefix:
+      classpath: /templates/
+  mvc:
+    static-path-pattern: /**
 logging:
   config:
     classpath: log4j2_dev.xml
@@ -16,8 +22,8 @@ logging:
       example:
         mapper: debug
 
-
 mybatis:
   mapper-locations: classpath:mapping/*Mapper.xml
   type-aliases-package: com.chen17.domain
+
 
