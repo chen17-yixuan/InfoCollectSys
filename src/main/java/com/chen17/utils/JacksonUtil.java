@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public final class JacksonUtil {
+
     public static ObjectMapper objectMapper;
 
     public JacksonUtil() {
