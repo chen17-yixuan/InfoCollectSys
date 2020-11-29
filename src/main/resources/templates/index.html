@@ -6,10 +6,17 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 引入 Bootstrap -->
 		<link href="css/bootstrap.css" rel="stylesheet">
+		
+		<!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+		<script src="js/jquery.js"></script>
+		<!-- 包括所有已编译的插件 -->
+		<script src="js/bootstrap.min.js"></script>
+		
 		<!-- VUE -->
 		<script src="js/vue.min.js"></script>
 		<script src="js/myvue.js"></script>
 		<script src="js/axios.min.js"></script>
+		
 	</head>
 	<body>
 		<div class="container-fluid" id="vue_det">
@@ -64,6 +71,9 @@
 							</li>
 							<li class="active">
 								<a href="#panel-879446" data-toggle="tab">全局搜索</a>
+							</li>
+							<li>
+								<a href="#panel-8794S" data-toggle="tab">其他工作</a>
 							</li>
 						</ul>
 						<div class="tab-content" style="font-size: large;">
@@ -146,6 +156,7 @@
 							</div>
 
 							<div class="tab-pane  active" id="panel-879446">
+
 								<h2>根据条件搜索</h2>
 								<p> 选择下方搜索框内容进行查找,双击修改信息</p>
 								<table class="table table-hover table-responsive">
@@ -319,6 +330,35 @@
 											<td>{{datec.errortableFaultclassification}}</td>
 											<td>{{datec.errortableBelongPaltform}}</td>
 											<td>{{datec.errortableNewcreate}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							
+							
+							<div class="tab-pane" id="panel-8794S">
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								<!-- 任务列表表格 -->
+								<table class="table text-center">
+									<tbody>
+										<tr>
+											<td>生成全市道路交通前端科技设备在线率统计表</td>
+											<td>上传每日导出文件</td>
+											<td>
+												<input id="zxltjfile" type="file" name="zxltjfile" class="center-block btn-primary"></input>
+												<button class="btn btn-default" v-on:click="upallexporttable">上传文件</button>
+											</td>
 										</tr>
 									</tbody>
 								</table>
@@ -820,15 +860,10 @@
 			</div><!-- /.modal -->
 
 		</div>
-		
-	<!-- VUE -->
-	<script src="js/vue.min.js"></script>
-	<script src="js/myvue.js"></script>
-	<script src="js/axios.min.js"></script>
-
-	<!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
-	<script src="js/jquery.js"></script>
-	<!-- 包括所有已编译的插件 -->
-	<script src="js/bootstrap.min.js"></script>
+		<!-- VUE -->
+		<script src="js/vue.min.js"></script>
+		<script src="js/myvue.js"></script>
+		<script src="js/axios.min.js"></script>
+	
 
 </html>

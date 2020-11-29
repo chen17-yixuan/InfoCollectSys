@@ -133,6 +133,25 @@
 
     </select>
 
+    <select id="selectByIpAddress" parameterType="hashmap" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from dayerrorwork where 1 = 1 and errortable_device_ip in
+
+        <foreach collection="IpAddress"  item="item" index ="index" open="(" separator="," close=")">
+
+            #{item}
+
+        </foreach>
+
+        <if test ="beginIndex != null and beginIndex != -1  ">
+
+            limit #{beginIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+
+        </if>
+
+    </select>
+
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from dayerrorwork

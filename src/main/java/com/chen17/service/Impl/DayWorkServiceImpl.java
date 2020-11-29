@@ -10,6 +10,8 @@ import com.chen17.mapper.DayerrorworkDao;
 import com.chen17.service.DayWorkService;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -88,5 +90,10 @@ public class DayWorkServiceImpl implements DayWorkService {
     @Override
     public int updateByPrimaryKey(Dayerrorwork record) {
         return this.dayerrorworkDao.updateByPrimaryKey(record);
+    }
+
+    @Override
+    public List<Dayerrorwork> selectByIpAddress(Map<String, List<String>> IpAddressMap) {
+        return dayerrorworkDao.selectByIpAddress(IpAddressMap);
     }
 }

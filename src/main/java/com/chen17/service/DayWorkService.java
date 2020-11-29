@@ -8,6 +8,7 @@ package com.chen17.service;
 import com.chen17.domain.Dayerrorwork;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface DayWorkService {
 
@@ -36,4 +37,6 @@ public interface DayWorkService {
     List<Dayerrorwork> selectForInfoTable(String errortable_county, String errortable_errortabledianweiname, String errortable_haikangpname, String errortable_device_ip, String errortable_servercompany, String errortable_faultclassification, String errortable_belong_paltform, String errortable_newcreate);
 
     int updateByPrimaryKey(Dayerrorwork record);
+
+    List<Dayerrorwork> selectByIpAddress(Map<String, List<String>> IpAddressMap);
 }

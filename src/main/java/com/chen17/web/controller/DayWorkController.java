@@ -6,12 +6,16 @@
 package com.chen17.web.controller;
 
 import com.chen17.domain.Dayerrorwork;
+import com.chen17.domain.UpLoadDayErrorWork;
+import com.chen17.domain.temporary.TemporaryWorkDomain;
 import com.chen17.service.DayWorkService;
+import com.chen17.utils.Excel.TemporaryWorkExcelUtils;
 import com.chen17.utils.FileUtil;
 import com.chen17.utils.JacksonUtil;
 import com.chen17.utils.Excel.ExcelUtils;
 import com.chen17.utils.Excel.TitleMap;
 import com.chen17.utils.Excel.UploadUtil;
+import com.chen17.utils.TemporaryWork;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileNotFoundException;
@@ -24,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +45,12 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 public class DayWorkController {
     private static final Logger log = LoggerFactory.getLogger(DayWorkController.class);
     DayWorkService ds;
+    TemporaryWork temporaryWork;
 
     @Autowired
-    public DayWorkController(DayWorkService ds) {
+    public DayWorkController(DayWorkService ds,TemporaryWork temporaryWork) {
         this.ds = ds;
+        this.temporaryWork = temporaryWork;
     }
 
     @RequestMapping({"selectall"})
@@ -313,6 +321,36 @@ public class DayWorkController {
             }
 
             return "成功";
+        }
+    }
+    @RequestMapping(
+            value = {"uploadpmalltable"},
+            method = {RequestMethod.POST}
+    )
+    public String uploadpmalltable(HttpServletRequest request,HttpServletResponse httpServletResponse) throws IOException, InvalidFormatException {
+        if (request instanceof MultipartHttpServletRequest) {
+            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+            MultipartFile file = multipartRequest.getFile("file");
+            InputStream reciveInputStream = file.getInputStream();
+            List<UpLoadDayErrorWork> list = ExcelUtils.simpleRead(reciveInputStream);
+
+            List<TemporaryWorkDomain> temporaryWorkDomainList = temporaryWork.dealOnlineRateTable(list);
+
+            TemporaryWorkExcelUtils.onlineRateTable(httpServletResponse,temporaryWorkDomainList,FileUtil.getDate());
+
+
+            System.out.println(JacksonUtil.toJSon(temporaryWorkDomainList));
+
+            System.out.println("上传的文件名称:" + file.getOriginalFilename());
+            System.out.println("上传的文件大小:" + file.getSize());
+            String name = multipartRequest.getParameter("name");
+            String content = multipartRequest.getParameter("content");
+            System.out.println("name:" + name);
+            System.out.println("content:" + content);
+            //return "" + dayerrorworks.size();
+            return null;
+        } else {
+            return "Not A Right File";
         }
     }
 }

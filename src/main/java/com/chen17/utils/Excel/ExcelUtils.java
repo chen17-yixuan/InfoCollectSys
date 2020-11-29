@@ -44,7 +44,7 @@ public class ExcelUtils {
 
     public static List<UpLoadDayErrorWork> simpleRead(InputStream is) {
         try {
-            Sheet sheet = new Sheet(1, 1, UpLoadDayErrorWork.class);
+            Sheet sheet = new Sheet(1, 2, UpLoadDayErrorWork.class);
             List<Object> readList = EasyExcelFactory.read(new BufferedInputStream(is), sheet);
             List<UpLoadDayErrorWork> list = new ArrayList();
             Iterator var4 = readList.iterator();

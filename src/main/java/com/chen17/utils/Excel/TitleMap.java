@@ -135,6 +135,21 @@ public class TitleMap {
         return list;
     }
 
+    public static List<String> getCountyList() {
+        List<String> list = new ArrayList();
+        list.add("张店区");
+        list.add("淄川区");
+        list.add("博山区");
+        list.add("周村区");
+        list.add("临淄区");
+        list.add("桓台县");
+        list.add("沂源县");
+        list.add("高青县");
+        list.add("高新区");
+        list.add("文昌湖区");
+        return list;
+    }
+
     public static short dealColHeightshort(int num) {
         return (short)(num * 20);
     }
