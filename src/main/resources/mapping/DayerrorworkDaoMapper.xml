@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen17.mapper.DayerrorworkDao">
+    <resultMap id="BaseResultMap" type="com.chen17.domain.Dayerrorwork">
+        <id column="errortable_id" jdbcType="INTEGER" property="errortableId"/>
+        <result column="errortable_county" jdbcType="VARCHAR" property="errortableCounty"/>
+        <result column="errortable_dianweiname" jdbcType="VARCHAR" property="errortableDianweiname"/>
+        <result column="errortable_haikangpname" jdbcType="VARCHAR" property="errortableHaikangpname"/>
+        <result column="errortable_haixinpname" jdbcType="VARCHAR" property="errortableHaixinpname"/>
+        <result column="errortable_device_type" jdbcType="VARCHAR" property="errortableDeviceType"/>
+        <result column="errortable_device_ip" jdbcType="VARCHAR" property="errortableDeviceIp"/>
+        <result column="errortable_build_company" jdbcType="VARCHAR" property="errortableBuildCompany"/>
+        <result column="errortable_device_expriation" jdbcType="VARCHAR" property="errortableDeviceExpriation"/>
+        <result column="errortable_repair_status" jdbcType="VARCHAR" property="errortableRepairStatus"/>
+        <result column="errortable_show" jdbcType="VARCHAR" property="errortableShow"/>
+        <result column="errortable_lastestcheck_time" jdbcType="VARCHAR" property="errortableLastestcheckTime"/>
+        <result column="errortable_request_time" jdbcType="TIMESTAMP" property="errortableRequestTime"/>
+        <result column="errortable_note" jdbcType="VARCHAR" property="errortableNote"/>
+        <result column="errortable_servercompany" jdbcType="VARCHAR" property="errortableServercompany"/>
+        <result column="errortable_faultclassification" jdbcType="VARCHAR" property="errortableFaultclassification"/>
+        <result column="errortable_belong_paltform" jdbcType="VARCHAR" property="errortableBelongPaltform"/>
+        <result column="errortable_newcreate" jdbcType="VARCHAR" property="errortableNewcreate"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    errortable_id, errortable_county, errortable_dianweiname, errortable_haikangpname, 
+    errortable_haixinpname, errortable_device_type, errortable_device_ip, errortable_build_company, 
+    errortable_device_expriation, errortable_repair_status, errortable_show, errortable_lastestcheck_time, 
+    errortable_request_time, errortable_note, errortable_servercompany, errortable_faultclassification, 
+    errortable_belong_paltform, errortable_newcreate
+  </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from dayerrorwork
+        where errortable_id = #{errortableId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from dayerrorwork
+    </select>
+
+    <!--<select id="selectByCompany" parameterType="java.lang.String" resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List"/>
+        from dayerrorwork
+        where errortable_servercompany = #{errortableServercompany,jdbcType=VARCHAR}
+
+    </select>-->
+    <select id="getUpLoadLastDate" resultType="java.util.Date">
+
+    select max(errortable_request_time) from dayerrorwork
+
+  </select>
+    <select id="getAllIpList" resultType="java.lang.String">
+
+    select errortable_device_ip from dayerrorwork;
+
+  </select>
+
+    <select id="selectByCompanyInProResaon" resultMap="BaseResultMap" parameterType="java.lang.String">
+
+        select
+        <include refid="Base_Column_List"/>
+        from dayerrorwork where 1 = 1
+
+        <if test="errortable_servercompany!=null and errortable_servercompany!=''">
+            and  errortable_servercompany = #{errortable_servercompany,jdbcType=VARCHAR}
+        </if>
+
+        <if test="errortable_device_expriation!=null and errortable_device_expriation!=''">
+            and errortable_device_expriation = #{errortable_device_expriation,jdbcType=VARCHAR}
+        </if>
+
+        <if test="errortable_faultclassification!=null and errortable_faultclassification!=''">
+            and errortable_faultclassification = #{errortable_faultclassification,jdbcType=VARCHAR}
+        </if>
+
+        order by errortable_faultclassification asc
+
+    </select>
+
+    <select id="selectByCounty" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List"/>
+        from dayerrorwork where errortable_county = #{errortable_county,jdbcType=VARCHAR}
+    </select>
+    <select id="getAllServerCompany" resultType="java.lang.String">
+
+        select errortable_servercompany from dayerrorwork group by errortable_servercompany;
+
+    </select>
+
+
+    <select id="selectForInfoTable" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from dayerrorwork where 1 = 1
+
+        <if test="errortable_servercompany!='' and errortable_servercompany!='null'">
+            and  errortable_servercompany = #{errortable_servercompany,jdbcType=VARCHAR}
+        </if>
+
+        <if test="errortable_faultclassification!='' and errortable_faultclassification!='null'">
+            and errortable_faultclassification = #{errortable_faultclassification,jdbcType=VARCHAR}
+        </if>
+        <if test="errortable_county!='' and errortable_county!='null'">
+            and errortable_county = #{errortable_county,jdbcType=VARCHAR}
+        </if>
+
+        <if test="errortable_dianwei!='' and errortable_dianwei!='null'">
+            and errortable_dianweiname Like  concat('%',#{errortable_dianwei,jdbcType=VARCHAR},'%')
+        </if>
+
+        <if test="errortable_haikangpname!='' and errortable_haikangpname!='null'">
+            and errortable_haikangpname Like  concat('%',#{errortable_haikangpname,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="errortable_device_ip!='' and errortable_device_ip!='null'">
+            and errortable_device_ip = #{errortable_device_ip,jdbcType=VARCHAR}
+        </if>
+        <if test="errortable_belong_paltform!='' and errortable_belong_paltform!='null'">
+            and errortable_belong_paltform = #{errortable_belong_paltform,jdbcType=VARCHAR}
+        </if>
+        <if test="errortable_newcreate!='' and errortable_newcreate!='null'">
+            and errortable_newcreate = #{errortable_newcreate,jdbcType=VARCHAR}
+        </if>
+
+        order by errortable_faultclassification asc
+
+
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dayerrorwork
+    where errortable_id = #{errortableId,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" keyColumn="errortable_id" keyProperty="errortableId"
+            parameterType="com.chen17.domain.UpLoadDayErrorWork" useGeneratedKeys="true">
+    insert into dayerrorwork (errortable_county, errortable_dianweiname, 
+      errortable_haikangpname, errortable_haixinpname, 
+      errortable_device_type, errortable_device_ip, 
+      errortable_build_company, errortable_device_expriation, 
+      errortable_repair_status, errortable_show, 
+      errortable_lastestcheck_time, errortable_request_time, 
+      errortable_note, errortable_servercompany, 
+      errortable_faultclassification, errortable_belong_paltform, 
+      errortable_newcreate)
+    values (#{errortableCounty,jdbcType=VARCHAR}, #{errortableDianweiname,jdbcType=VARCHAR}, 
+      #{errortableHaikangpname,jdbcType=VARCHAR}, #{errortableHaixinpname,jdbcType=VARCHAR}, 
+      #{errortableDeviceType,jdbcType=VARCHAR}, #{errortableDeviceIp,jdbcType=VARCHAR}, 
+      #{errortableBuildCompany,jdbcType=VARCHAR}, #{errortableDeviceExpriation,jdbcType=VARCHAR}, 
+      #{errortableRepairStatus,jdbcType=VARCHAR}, #{errortableShow,jdbcType=VARCHAR}, 
+      #{errortableLastestcheckTime,jdbcType=VARCHAR}, #{errortableRequestTime,jdbcType=TIMESTAMP}, 
+      #{errortableNote,jdbcType=VARCHAR}, #{errortableServercompany,jdbcType=VARCHAR}, 
+      #{errortableFaultclassification,jdbcType=VARCHAR}, #{errortableBelongPaltform,jdbcType=VARCHAR}, 
+      #{errortableNewcreate,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" keyColumn="errortable_id" keyProperty="errortableId"
+            parameterType="com.chen17.domain.Dayerrorwork" useGeneratedKeys="true">
+        insert into dayerrorwork
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="errortableCounty != null">
+                errortable_county,
+            </if>
+            <if test="errortableDianweiname != null">
+                errortable_dianweiname,
+            </if>
+            <if test="errortableHaikangpname != null">
+                errortable_haikangpname,
+            </if>
+            <if test="errortableHaixinpname != null">
+                errortable_haixinpname,
+            </if>
+            <if test="errortableDeviceType != null">
+                errortable_device_type,
+            </if>
+            <if test="errortableDeviceIp != null">
+                errortable_device_ip,
+            </if>
+            <if test="errortableBuildCompany != null">
+                errortable_build_company,
+            </if>
+            <if test="errortableDeviceExpriation != null">
+                errortable_device_expriation,
+            </if>
+            <if test="errortableRepairStatus != null">
+                errortable_repair_status,
+            </if>
+            <if test="errortableShow != null">
+                errortable_show,
+            </if>
+            <if test="errortableLastestcheckTime != null">
+                errortable_lastestcheck_time,
+            </if>
+            <if test="errortableRequestTime != null">
+                errortable_request_time,
+            </if>
+            <if test="errortableNote != null">
+                errortable_note,
+            </if>
+            <if test="errortableServercompany != null">
+                errortable_servercompany,
+            </if>
+            <if test="errortableFaultclassification != null">
+                errortable_faultclassification,
+            </if>
+            <if test="errortableBelongPaltform != null">
+                errortable_belong_paltform,
+            </if>
+            <if test="errortableNewcreate != null">
+                errortable_newcreate,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="errortableCounty != null">
+                #{errortableCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableDianweiname != null">
+                #{errortableDianweiname,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableHaikangpname != null">
+                #{errortableHaikangpname,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableHaixinpname != null">
+                #{errortableHaixinpname,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableDeviceType != null">
+                #{errortableDeviceType,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableDeviceIp != null">
+                #{errortableDeviceIp,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableBuildCompany != null">
+                #{errortableBuildCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableDeviceExpriation != null">
+                #{errortableDeviceExpriation,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableRepairStatus != null">
+                #{errortableRepairStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableShow != null">
+                #{errortableShow,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableLastestcheckTime != null">
+                #{errortableLastestcheckTime,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableRequestTime != null">
+                #{errortableRequestTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="errortableNote != null">
+                #{errortableNote,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableServercompany != null">
+                #{errortableServercompany,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableFaultclassification != null">
+                #{errortableFaultclassification,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableBelongPaltform != null">
+                #{errortableBelongPaltform,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableNewcreate != null">
+                #{errortableNewcreate,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.chen17.domain.UpLoadDayErrorWork">
+        update dayerrorwork
+        <set>
+            <if test="errortableCounty != null">
+                errortable_county = #{errortableCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableDianweiname != null">
+                errortable_dianweiname = #{errortableDianweiname,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableHaikangpname != null">
+                errortable_haikangpname = #{errortableHaikangpname,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableHaixinpname != null">
+                errortable_haixinpname = #{errortableHaixinpname,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableDeviceType != null">
+                errortable_device_type = #{errortableDeviceType,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableDeviceIp != null">
+                errortable_device_ip = #{errortableDeviceIp,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableBuildCompany != null">
+                errortable_build_company = #{errortableBuildCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableDeviceExpriation != null">
+                errortable_device_expriation = #{errortableDeviceExpriation,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableRepairStatus != null">
+                errortable_repair_status = #{errortableRepairStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableShow != null">
+                errortable_show = #{errortableShow,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableLastestcheckTime != null">
+                errortable_lastestcheck_time = #{errortableLastestcheckTime,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableRequestTime != null">
+                errortable_request_time = #{errortableRequestTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="errortableNote != null">
+                errortable_note = #{errortableNote,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableServercompany != null">
+                errortable_servercompany = #{errortableServercompany,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableFaultclassification != null">
+                errortable_faultclassification = #{errortableFaultclassification,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableBelongPaltform != null">
+                errortable_belong_paltform = #{errortableBelongPaltform,jdbcType=VARCHAR},
+            </if>
+            <if test="errortableNewcreate != null">
+                errortable_newcreate = #{errortableNewcreate,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where errortable_id = #{errortableId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.chen17.domain.UpLoadDayErrorWork">
+    update dayerrorwork
+    set errortable_county = #{errortableCounty,jdbcType=VARCHAR},
+      errortable_dianweiname = #{errortableDianweiname,jdbcType=VARCHAR},
+      errortable_haikangpname = #{errortableHaikangpname,jdbcType=VARCHAR},
+      errortable_haixinpname = #{errortableHaixinpname,jdbcType=VARCHAR},
+      errortable_device_type = #{errortableDeviceType,jdbcType=VARCHAR},
+      errortable_device_ip = #{errortableDeviceIp,jdbcType=VARCHAR},
+      errortable_build_company = #{errortableBuildCompany,jdbcType=VARCHAR},
+      errortable_device_expriation = #{errortableDeviceExpriation,jdbcType=VARCHAR},
+      errortable_repair_status = #{errortableRepairStatus,jdbcType=VARCHAR},
+      errortable_show = #{errortableShow,jdbcType=VARCHAR},
+      errortable_lastestcheck_time = #{errortableLastestcheckTime,jdbcType=VARCHAR},
+      errortable_request_time = #{errortableRequestTime,jdbcType=TIMESTAMP},
+      errortable_note = #{errortableNote,jdbcType=VARCHAR},
+      errortable_servercompany = #{errortableServercompany,jdbcType=VARCHAR},
+      errortable_faultclassification = #{errortableFaultclassification,jdbcType=VARCHAR},
+      errortable_belong_paltform = #{errortableBelongPaltform,jdbcType=VARCHAR},
+      errortable_newcreate = #{errortableNewcreate,jdbcType=VARCHAR}
+    where errortable_id = #{errortableId,jdbcType=INTEGER}
+  </update>
+
+    <update id="cleanAllNewCreate">
+      update dayerrorwork set errortable_newcreate = ''
+    </update>
+
+</mapper>
