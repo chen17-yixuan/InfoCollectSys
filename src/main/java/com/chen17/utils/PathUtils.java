@@ -1,5 +1,7 @@
 package com.chen17.utils;
 
+import org.springframework.boot.system.ApplicationHome;
+
 import java.io.File;
 
 /**
@@ -39,14 +41,10 @@ public class PathUtils {
 
     private static File getFile() {
         //关键是这行...
-        String path = PathUtils.class.getProtectionDomain().getCodeSource()
-                .getLocation().getFile();
-        try {
-            //转换处理中文及空格
-            path = java.net.URLDecoder.decode(path, "UTF-8");
-        } catch (java.io.UnsupportedEncodingException e) {
-            return null;
-        }
-        return new File(path);
+
+        ApplicationHome h = new ApplicationHome(PathUtils.class);
+
+        File jarF = h.getSource();
+        return jarF;
     }
 }

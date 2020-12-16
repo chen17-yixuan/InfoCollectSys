@@ -16,7 +16,7 @@ spring:
     static-path-pattern: /**
 logging:
   config:
-    classpath: log4j2_dev.xml
+    classpath: log4j2.xml
   level:
     com:
       example:

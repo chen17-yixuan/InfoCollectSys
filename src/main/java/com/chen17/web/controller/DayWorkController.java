@@ -348,7 +348,7 @@ public class DayWorkController {
             System.out.println("name:" + name);
             System.out.println("content:" + content);
             //return "" + dayerrorworks.size();
-            return null;
+            return "成功";
         } else {
             return "Not A Right File";
         }

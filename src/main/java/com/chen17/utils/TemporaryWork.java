@@ -5,6 +5,8 @@ import com.chen17.domain.UpLoadDayErrorWork;
 import com.chen17.domain.temporary.TemporaryWorkDomain;
 import com.chen17.service.DayWorkService;
 import com.chen17.utils.Excel.TitleMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,7 @@ import java.util.*;
 @Component
 public class TemporaryWork {
 
+    static Logger logger = LogManager.getLogger(TemporaryWork.class.getName());
     DayWorkService ds;
 
     @Autowired
@@ -43,8 +46,8 @@ public class TemporaryWork {
         //下面开始处理数据
         //填写常量处理
         String jarFilePath = PathUtils.getJarDir();
-
-        File propFile = new File(jarFilePath, "countyNum.properties");
+        File propFile = new File(jarFilePath+"\\countyNum.properties");
+        System.out.println(propFile);
 
         if (!propFile.exists()) {
             try {
@@ -63,6 +66,7 @@ public class TemporaryWork {
                 PropertiesUtils.writeProperties(propertiesPath, "wenchanghu", "496");
             } catch (IOException e) {
                 e.printStackTrace();
+                logger.debug(e.getMessage());
             }
         }
         //以上已经创建好键值对对象]

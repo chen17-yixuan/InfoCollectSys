@@ -191,12 +191,12 @@ var vm = new Vue({
                     responseType: 'blob'
                 })
                     .then(res => {
-                        console.log(data.data);
+                        console.log(res.data);
 
-                        if (!res) {
+                        if (!res.data) {
                             return
                         }
-                        let url = window.URL.createObjectURL(new Blob([res]))
+                        let url = window.URL.createObjectURL(new Blob([res.data]))
                         let link = document.createElement('a')
                         link.style.display = 'none'
                         link.href = url
@@ -206,7 +206,8 @@ var vm = new Vue({
                         link.click()
 
                     })
-                    .catch(err => {
+                    .catch(e => {
+						console.log(e)
                         alert("!!上传失败,请检查文件是否正确!!");
                     });
             }
