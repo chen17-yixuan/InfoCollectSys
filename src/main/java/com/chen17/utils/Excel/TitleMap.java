@@ -117,10 +117,10 @@ public class TitleMap {
 
     public static List<String> getTitleorderMap() {
         List<String> list = new ArrayList();
-        list.add("三棱");
         list.add("易华录");
         list.add("华迪");
         list.add("广宁");
+        list.add("三棱");
         list.add("张店大队");
         list.add("淄川大队");
         list.add("博山大队");
