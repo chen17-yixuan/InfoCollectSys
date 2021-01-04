@@ -46,7 +46,7 @@ public class TemporaryWork {
         //下面开始处理数据
         //填写常量处理
         String jarFilePath = PathUtils.getJarDir();
-        File propFile = new File(jarFilePath+"\\countyNum.properties");
+        File propFile = new File(jarFilePath + "\\countyNum.properties");
         System.out.println(propFile);
 
         if (!propFile.exists()) {
@@ -89,14 +89,22 @@ public class TemporaryWork {
             int zswfwxShebei = 0;
             int zswfwxTingyun = 0;
             int zswfwxQita = 0;
+
+            int wxzZongji = 0;
+
             int wxzXiaoji = 0;
             int wxzDzjc = 0;
             int wxzDsjk = 0;
             int wxzKk = 0;
 
+            int cbWxzXiaoJi = 0;
+            int cbWxzDzjc = 0;
+            int cbWxzDsjk = 0;
+            int cbWxzKK = 0;
+
             //开始机器内部处理通过IP取得的故障
             for (Dayerrorwork dayerrorwork : dayerrorworks) {
-                if(!dayerrorwork.getErrortableCounty().equals(county)){
+                if (!dayerrorwork.getErrortableCounty().equals(county)) {
                     continue;
                 }
                 String errclass = dayerrorwork.getErrortableFaultclassification();
@@ -104,16 +112,26 @@ public class TemporaryWork {
                     if (dayerrorwork.getErrortableDeviceType() == null) {
                         dayerrorwork.setErrortableDeviceType("");
                     }
-                    ;
                     String devType = dayerrorwork.getErrortableDeviceType();
                     boolean isKk = devType.equals("卡口") || devType.equals("反向卡口");
                     boolean isDj = devType.equals("电警") || devType.equals("微电警") || devType.equals("电子警察");
-                    if (isKk) {
-                        wxzKk++;
-                    } else if (isDj) {
-                        wxzDzjc++;
+
+                    if (dayerrorwork.getErrortableServercompany().equals("已出质保")) {
+                        if (isKk) {
+                            cbWxzKK++;
+                        }else if(isDj){
+                            cbWxzDzjc++;
+                        }else {
+                            cbWxzDsjk++;
+                        }
                     } else {
-                        wxzDsjk++;
+                        if (isKk) {
+                            wxzKk++;
+                        } else if (isDj) {
+                            wxzDzjc++;
+                        } else {
+                            wxzDsjk++;
+                        }
                     }
                 } else {
                     switch (errclass) {
@@ -140,7 +158,6 @@ public class TemporaryWork {
                     }
 
 
-
                 }
             }
             Map<String, Integer> countyallnum = null;
@@ -151,7 +168,7 @@ public class TemporaryWork {
             }
             switch (county) {
                 case "张店区":
-                    allDevNum= countyallnum.get("zhangdian");
+                    allDevNum = countyallnum.get("zhangdian");
                     break;
                 case "淄川区":
                     allDevNum = countyallnum.get("zichuan");
@@ -160,7 +177,7 @@ public class TemporaryWork {
                     allDevNum = countyallnum.get("boshan");
                     break;
                 case "周村区":
-                    allDevNum =countyallnum.get("zhoucun");
+                    allDevNum = countyallnum.get("zhoucun");
                     break;
                 case "临淄区":
                     allDevNum = countyallnum.get("linzi");
@@ -175,10 +192,10 @@ public class TemporaryWork {
                     allDevNum = countyallnum.get("gaoqing");
                     break;
                 case "高新区":
-                    allDevNum =countyallnum.get("gaoxinqu");
+                    allDevNum = countyallnum.get("gaoxinqu");
                     break;
                 case "文昌湖区":
-                    allDevNum =countyallnum.get("wenchanghu");
+                    allDevNum = countyallnum.get("wenchanghu");
                     break;
                 default:
                     System.out.println("存在其他数据--获取总数量数量");
@@ -189,19 +206,29 @@ public class TemporaryWork {
             temporaryWorkDomain.setZswfwxShebei(zswfwxShebei);
             temporaryWorkDomain.setZswfwxTingyun(zswfwxTingyun);
             temporaryWorkDomain.setZswfwxQita(zswfwxQita);
+
             temporaryWorkDomain.setWxzDzjc(wxzDzjc);
             temporaryWorkDomain.setWxzDsjk(wxzDsjk);
             temporaryWorkDomain.setWxzKk(wxzKk);
+
+            temporaryWorkDomain.setWxzCbDsjk(cbWxzDsjk);
+            temporaryWorkDomain.setWxzCbDzjc(cbWxzDzjc);
+            temporaryWorkDomain.setWxzCbKk(cbWxzKK);
+
             zswfwxxiaoji = zswfwxGuangxian + zswfwxGongdian + zswfwxShebei + zswfwxTingyun + zswfwxQita;
             temporaryWorkDomain.setZswfwxxiaoji(zswfwxxiaoji);
             wxzXiaoji = wxzDzjc + wxzDsjk + wxzKk;
+            cbWxzXiaoJi = cbWxzDsjk+cbWxzDzjc+cbWxzKK;
+            temporaryWorkDomain.setWxzCbXiaoji(cbWxzXiaoJi);
+            wxzZongji = wxzXiaoji+cbWxzXiaoJi;
+            temporaryWorkDomain.setWxzZongji(wxzZongji);
             temporaryWorkDomain.setWxzXiaoji(wxzXiaoji);
 
             // 创建一个数值格式化对象
             NumberFormat numberFormat = NumberFormat.getInstance();
             // 设置精确到小数点后2位
             numberFormat.setMaximumFractionDigits(2);
-            String zxl = numberFormat.format( (((float)allDevNum - (float)wxzXiaoji) / (float) allDevNum) * 100) + "%";
+            String zxl = numberFormat.format((((float) allDevNum - (float) wxzZongji) / (float) allDevNum) * 100) + "%";
             temporaryWorkDomain.setZxl(zxl);
 
             temporaryWorkDomain.setAllDevNum(allDevNum);

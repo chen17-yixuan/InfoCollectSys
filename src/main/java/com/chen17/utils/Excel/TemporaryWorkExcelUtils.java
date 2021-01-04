@@ -25,12 +25,12 @@ public class TemporaryWorkExcelUtils {
         Sheet sheet = workbook.getSheetAt(0);
 
         Row timerow = sheet.getRow(1);
-        Cell timecell = timerow.getCell(13);
+        Cell timecell = timerow.getCell(18);
         timecell.setCellValue(FileUtil.getDate());
 
         for (int i = 0; i < temporaryWorkDomainList.size(); i++) {
             TemporaryWorkDomain temporaryWorkDomain = temporaryWorkDomainList.get(i);
-            Row curow = sheet.getRow(i + 4);
+            Row curow = sheet.getRow(i + 5);
 
             Cell cell2 = curow.getCell(2);
             cell2.setCellValue(temporaryWorkDomain.getAllDevNum());
@@ -57,22 +57,42 @@ public class TemporaryWorkExcelUtils {
                 cell8.setCellValue(temporaryWorkDomain.getZswfwxQita());
             }
             Cell cell9 = curow.getCell(9);
-            cell9.setCellValue(temporaryWorkDomain.getWxzXiaoji());
+            cell9.setCellValue(temporaryWorkDomain.getWxzZongji());
+
+            Cell cell10 = curow.getCell(10);
+            cell10.setCellValue(temporaryWorkDomain.getWxzXiaoji());
 
             if (temporaryWorkDomain.getWxzDzjc() != 0) {
-                Cell cell10 = curow.getCell(10);
-                cell10.setCellValue(temporaryWorkDomain.getWxzDzjc());
+                Cell cell11 = curow.getCell(11);
+                cell11.setCellValue(temporaryWorkDomain.getWxzDzjc());
             }
             if (temporaryWorkDomain.getWxzDsjk() != 0) {
-                Cell cell11 = curow.getCell(11);
-                cell11.setCellValue(temporaryWorkDomain.getWxzDsjk());
+                Cell cell12 = curow.getCell(12);
+                cell12.setCellValue(temporaryWorkDomain.getWxzDsjk());
             }
             if (temporaryWorkDomain.getWxzKk() != 0) {
-                Cell cell12 = curow.getCell(12);
-                cell12.setCellValue(temporaryWorkDomain.getWxzKk());
+                Cell cell13 = curow.getCell(13);
+                cell13.setCellValue(temporaryWorkDomain.getWxzKk());
             }
-            Cell cell13 = curow.getCell(13);
-            cell13.setCellValue(temporaryWorkDomain.getZxl());
+
+            Cell cell14 = curow.getCell(14);
+            cell14.setCellValue(temporaryWorkDomain.getWxzCbXiaoji());
+
+            if (temporaryWorkDomain.getWxzCbDzjc() != 0) {
+                Cell cell15 = curow.getCell(15);
+                cell15.setCellValue(temporaryWorkDomain.getWxzCbDzjc());
+            }
+            if (temporaryWorkDomain.getWxzCbDsjk() != 0) {
+                Cell cell16 = curow.getCell(16);
+                cell16.setCellValue(temporaryWorkDomain.getWxzCbDsjk());
+            }
+            if (temporaryWorkDomain.getWxzCbKk() != 0) {
+                Cell cell17 = curow.getCell(17);
+                cell17.setCellValue(temporaryWorkDomain.getWxzCbKk());
+            }
+
+            Cell cell18 = curow.getCell(18);
+            cell18.setCellValue(temporaryWorkDomain.getZxl());
         }
 
         //BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(new File("D:\\cc.xlsx")));

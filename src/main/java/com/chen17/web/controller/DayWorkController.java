@@ -336,6 +336,8 @@ public class DayWorkController {
 
             List<TemporaryWorkDomain> temporaryWorkDomainList = temporaryWork.dealOnlineRateTable(list);
 
+            System.out.println(JacksonUtil.toJSon(temporaryWorkDomainList));
+
             TemporaryWorkExcelUtils.onlineRateTable(httpServletResponse,temporaryWorkDomainList,FileUtil.getDate());
 
 

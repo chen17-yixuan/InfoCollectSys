@@ -32,15 +32,26 @@ public class TemporaryWorkDomain {
     private Integer zswfwxQita;
 
     @ExcelColumnNum(9)
-    private Integer wxzXiaoji;
+    private Integer wxzZongji;
 
     @ExcelColumnNum(10)
-    private Integer wxzDzjc;
+    private Integer wxzXiaoji;
     @ExcelColumnNum(11)
-    private Integer wxzDsjk;
+    private Integer wxzDzjc;
     @ExcelColumnNum(12)
+    private Integer wxzDsjk;
+    @ExcelColumnNum(13)
     private Integer wxzKk;
 
-    @ExcelColumnNum(13)
+    @ExcelColumnNum(14)
+    private Integer wxzCbXiaoji;
+    @ExcelColumnNum(15)
+    private Integer wxzCbDzjc;
+    @ExcelColumnNum(16)
+    private Integer wxzCbDsjk;
+    @ExcelColumnNum(17)
+    private Integer wxzCbKk;
+
+    @ExcelColumnNum(18)
     private String zxl;
 }
