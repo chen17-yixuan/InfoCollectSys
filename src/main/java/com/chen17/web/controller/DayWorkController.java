@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -97,19 +98,26 @@ public class DayWorkController {
     }
 
     @RequestMapping({"checkanddelete"})
-    public String checkAndDelete(HttpServletRequest request) throws IOException {
+    public String checkAndDelete(HttpServletRequest request ,HttpServletResponse httpServletResponse) throws IOException {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
         String ips = multipartRequest.getParameter("ips");
         ObjectMapper mapper = new ObjectMapper();
         ArrayList<Integer> integers = (ArrayList)mapper.readValue(ips, ArrayList.class);
         Iterator var6 = integers.iterator();
-
+        List<Dayerrorwork> list = new ArrayList<>();
         while(var6.hasNext()) {
             Integer i = (Integer)var6.next();
-            this.ds.deleteByPrimaryKey(i);
+            list.add(ds.selectByPrimaryKey(i));
+            ds.deleteByPrimaryKey(i);
         }
 
-        return String.valueOf(integers.size());
+        Map<String,List<Dayerrorwork>> map = new HashMap();
+
+        map.put("已修复",list);
+
+        System.out.println(map);
+        ExcelUtils.exportExcel(httpServletResponse, map, "Repaired" + FileUtil.getTime() + ".xls");
+        return null;
     }
 
     @RequestMapping({"downloadips"})

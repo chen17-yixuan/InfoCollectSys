@@ -13,7 +13,6 @@ import java.io.IOException;
 
 public class Test {
 
-    @org.junit.Test
     public void test_(){
         String jarFilePath = PathUtils.getJarDir();
 

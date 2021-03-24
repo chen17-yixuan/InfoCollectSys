@@ -266,10 +266,21 @@ var vm = new Vue({
                 }
             })
                 .then(res => {
-                    console.log(res.data);
                     $('#IPmyModal').modal('hide');
-                    this.pmcheckanddelete = "删除完成,共删除" + res.data + "个"
                     this.pmcheckanddeleteclass = true;
+
+                    if (!res.data) {
+                        return
+                    }
+                    let url = window.URL.createObjectURL(new Blob([res.data]))
+                    let link = document.createElement('a')
+                    link.style.display = 'none'
+                    link.href = url
+                    link.setAttribute('download', 'repairedexcel.xlsx')
+
+                    document.body.appendChild(link)
+                    link.click()
+
                 })
                 .catch(err => {
 

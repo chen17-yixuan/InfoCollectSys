@@ -116,6 +116,9 @@ public class TemporaryWork {
                     boolean isKk = devType.equals("卡口") || devType.equals("反向卡口");
                     boolean isDj = devType.equals("电警") || devType.equals("微电警") || devType.equals("电子警察");
 
+                    if (dayerrorwork.getErrortableServercompany() == null) {
+                        continue;
+                    }
                     if (dayerrorwork.getErrortableServercompany().equals("已出质保")) {
                         if (isKk) {
                             cbWxzKK++;
