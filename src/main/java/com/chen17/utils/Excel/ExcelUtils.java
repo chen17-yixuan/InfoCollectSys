@@ -96,6 +96,7 @@ public class ExcelUtils {
     }
 
     public static void exportExcel(HttpServletResponse httpServletResponse, Map<String, List<Dayerrorwork>> sheetAndValue, String fileName) {
+        int flag = 0;
         try {
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFCellStyle mainStyle = workbook.createCellStyle();
@@ -125,7 +126,6 @@ public class ExcelUtils {
             mainTitlefont.setFontHeightInPoints((short)30);
             mainTitleStyle.setFont(mainTitlefont);
             Iterator var9 = TitleMap.getTitleorderMap().iterator();
-
             label131:
             while(true) {
                 String sheetNames;
@@ -139,10 +139,15 @@ public class ExcelUtils {
                             workbook.close();
                             return;
                         }
-
                         sheetNames = (String)var9.next();
-                    } while(sheetAndValue.get(sheetNames) == null);
-                } while(((List)sheetAndValue.get(sheetNames)).size() == 0);
+
+                        if(sheetAndValue.keySet().contains("All") && flag == 0){
+                            sheetNames = "All";
+                            flag=1;
+                        }
+                        System.out.println(flag);
+                    } while(sheetAndValue.get(sheetNames) == null );
+                } while(((List)sheetAndValue.get(sheetNames)).size() == 0  );
 
                 HSSFSheet sheet = workbook.createSheet(sheetNames);
                 HSSFPrintSetup ps = sheet.getPrintSetup();

@@ -116,7 +116,7 @@ public class DayWorkController {
         map.put("已修复",list);
 
         System.out.println(map);
-        ExcelUtils.exportExcel(httpServletResponse, map, "Repaired" + FileUtil.getTime() + ".xls");
+        ExcelUtils.exportExcel3(httpServletResponse, map, "Repaired" + FileUtil.getTime() + ".xls");
         return null;
     }
 
@@ -129,15 +129,15 @@ public class DayWorkController {
     @RequestMapping({"downloadfilemodel"})
     public String download(HttpServletResponse httpServletResponse, String companyname, String ifinpro, String reason) throws FileNotFoundException {
         Map<String, List<Dayerrorwork>> map = new HashMap();
-        if (companyname.equals("null")) {
+        if (companyname.equals("null") || companyname.equals("")) {
             companyname = null;
         }
 
-        if (ifinpro.equals("null")) {
+        if (ifinpro.equals("null") || ifinpro.equals("")) {
             ifinpro = null;
         }
 
-        if (reason.equals("null")) {
+        if (reason.equals("null") || reason.equals("")) {
             reason = null;
         }
 
@@ -147,12 +147,19 @@ public class DayWorkController {
 
         while(var8.hasNext()) {
             Dayerrorwork dw = (Dayerrorwork)var8.next();
-            if (!dw.getErrortableFaultclassification().equals("停运")) {
+
                 dealend.add(dw);
-            }
+
+        }
+        if(companyname == null ){
+            companyname = "All";
         }
 
         map.put(companyname, dealend);
+        System.out.println(map);
+        System.out.println(companyname+"SS");
+
+
         ExcelUtils.exportExcel(httpServletResponse, map, companyname + FileUtil.getTime() + ".xls");
         return "成功";
     }

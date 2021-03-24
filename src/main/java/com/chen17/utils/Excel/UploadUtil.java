@@ -35,7 +35,7 @@ public class UploadUtil {
                     }
 
 
-                    if (!ued.getErrortableRequestTime().before(lastestTime) && !idList.contains(ued.getErrortableDeviceIp()) ){
+                    if (!idList.contains(ued.getErrortableDeviceIp()) ){
                         Dayerrorwork dw = new Dayerrorwork();
                         dw.setErrortableBuildCompany(ued.getErrortableBuildCompany());
                         dw.setErrortableLastestcheckTime(ued.getErrortableLastestcheckTime());

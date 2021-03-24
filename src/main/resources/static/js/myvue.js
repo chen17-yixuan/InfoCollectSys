@@ -118,7 +118,7 @@ var vm = new Vue({
             this.errinfo.errortableBuildCompany = datec.errortableBuildCompany;
             this.errinfo.errortableDeviceExpriation = datec.errortableDeviceExpriation;
             this.errinfo.errortableRepairStatus = datec.errortableRepairStatus;
-            this.errinfo.errortableRequestTime = datec.errortableRequestTime;
+            this.errinfo.errortableRequestTime = this.dateFilter(datec.errortableRequestTime);
             this.errinfo.errortableNote = datec.errortableNote;
             this.errinfo.errortableServercompany = datec.errortableServercompany;
             this.errinfo.errortableFaultclassification = datec.errortableFaultclassification;
@@ -127,6 +127,7 @@ var vm = new Vue({
 
             $('#updateinfoModal').modal('show');
         },
+        dateFilter: function(input) { var d = new Date(input); var year = d.getFullYear(); var month = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : "" + (d.getMonth() + 1); var day = d.getDate() < 10 ? "0" + d.getDate() : "" + d.getDate(); var hour = d.getHours() < 10 ? "0" + d.getHours() : "" + d.getHours(); var minutes = d.getMinutes() < 10 ? "0" + d.getMinutes() : "" + d.getMinutes(); var seconds = d.getSeconds() < 10 ? "0" + d.getSeconds() : "" + d.getSeconds(); return ( year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds ); },
 
         upnewfile: function () {
             //校验文件是否是标准的XLSX格式
@@ -260,6 +261,7 @@ var vm = new Vue({
                 method: 'post',
                 url: "/daywork/checkanddelete",
                 data: formData,
+                responseType: 'blob',
                 headers: {
                     //文件头必须写，这是网址头
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -267,7 +269,7 @@ var vm = new Vue({
             })
                 .then(res => {
                     $('#IPmyModal').modal('hide');
-                    this.pmcheckanddeleteclass = true;
+                    console.log(res.data);
 
                     if (!res.data) {
                         return
@@ -276,14 +278,15 @@ var vm = new Vue({
                     let link = document.createElement('a')
                     link.style.display = 'none'
                     link.href = url
-                    link.setAttribute('download', 'repairedexcel.xlsx')
+                    link.setAttribute('download', 'excel.xlsx')
 
                     document.body.appendChild(link)
                     link.click()
 
                 })
-                .catch(err => {
-
+                .catch(e => {
+                    console.log(e)
+                    alert("!!上传失败,请检查文件是否正确!!");
                 });
         },
 
@@ -297,7 +300,6 @@ var vm = new Vue({
         getpmtablebycompany: function (companynames, ifinpro, reason) {
             window.location.href = "/daywork/downloadfilemodel?companyname=" + companynames + "&ifinpro=" + ifinpro +
                 "&reason=" + reason;
-
         },
 
         getpmtablebyerrortype: function (reason) {
@@ -318,6 +320,8 @@ var vm = new Vue({
             window.location.href = "/daywork/downloadfilemodelcounty?county=" + county;
 
         },
+
+
 
         //下面继续写方法 上传以filebasepload为id的文件框，到接口中
         upnewfilebase: function () {
