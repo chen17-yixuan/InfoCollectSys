@@ -107,18 +107,26 @@ public class DayWorkController {
         ArrayList<Integer> integers = (ArrayList)mapper.readValue(ips, ArrayList.class);
         Iterator var6 = integers.iterator();
         List<Dayerrorwork> list = new ArrayList<>();
-        while(var6.hasNext()) {
-            Integer i = (Integer)var6.next();
-            list.add(ds.selectByPrimaryKey(i));
-            ds.deleteByPrimaryKey(i);
+        try{
+            while(var6.hasNext()) {
+                Integer i = (Integer)var6.next();
+                Dayerrorwork dw2 = ds.selectByPrimaryKey(i);
+                if(dw2 != null){
+                    list.add(dw2);
+                }
+                ds.deleteByPrimaryKey(i);
+            }
+
+            Map<String,List<Dayerrorwork>> map = new HashMap();
+
+            map.put("已修复",list);
+
+            System.out.println(map);
+            ExcelUtils.exportExcel3(httpServletResponse, map, "Repaired" + FileUtil.getTime() + ".xls");
         }
-
-        Map<String,List<Dayerrorwork>> map = new HashMap();
-
-        map.put("已修复",list);
-
-        System.out.println(map);
-        ExcelUtils.exportExcel3(httpServletResponse, map, "Repaired" + FileUtil.getTime() + ".xls");
+        catch (Exception e){
+            log.warn(e.getMessage());
+        }
         return null;
     }
 
