@@ -19,6 +19,7 @@ var vm = new Vue({
         sfxz: null,
         checkedall: "checked",
         checkedids: [],
+        errortableRequestTimeShow: null,
         errinfo: {
             errortableId: null,
             errortableCounty: null,
@@ -39,8 +40,6 @@ var vm = new Vue({
         }
     },
     methods: {
-
-
         deletebyids: function (singleid) {
             $('#updateinfoModal').modal('hide');
 
@@ -77,8 +76,43 @@ var vm = new Vue({
             } else {
                 $('#updateinfoModal').modal('hide');
             }
+        },
 
+        selectChecked: function (datecid){
+            alert(this.checkedall);
+        },
 
+        updateinfoModalByGroup: function () {
+            $('#updateinfoModalByGroup').modal('show');
+        },
+
+        updateinfoModalByGroupConfirm: function () {
+            if (confirm('确定修改？')) {
+                let formData = new FormData();
+                //file对应传过去的参数
+                formData.append('ids', JSON.stringify(this.checkedids));
+                formData.append('updatedata', JSON.stringify(this.errinfo));
+
+                axios({
+                    method: 'post',
+                    url: "/daywork/updateByIds",
+                    data: formData,
+                    headers: {
+                        //文件头必须写，这是网址头
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                })
+                    .then(res => {
+                        this.search();
+                        $('#updateinfoModalByGroup').modal('hide');
+
+                    })
+                    .catch(err => {
+                        alert("修改失败")
+                    });
+
+                this.checkedids = [];
+            }
         },
 
         updatebyid: function () {
@@ -86,7 +120,6 @@ var vm = new Vue({
             let formData = new FormData();
             //file对应传过去的参数
             formData.append('updatedata', JSON.stringify(this.errinfo));
-
 
             axios({
                 method: 'post',
@@ -118,7 +151,7 @@ var vm = new Vue({
             this.errinfo.errortableBuildCompany = datec.errortableBuildCompany;
             this.errinfo.errortableDeviceExpriation = datec.errortableDeviceExpriation;
             this.errinfo.errortableRepairStatus = datec.errortableRepairStatus;
-            this.errinfo.errortableRequestTime = this.dateFilter(datec.errortableRequestTime);
+            this.errortableRequestTimeShow = this.dateFilter(datec.errortableRequestTime);
             this.errinfo.errortableNote = datec.errortableNote;
             this.errinfo.errortableServercompany = datec.errortableServercompany;
             this.errinfo.errortableFaultclassification = datec.errortableFaultclassification;
@@ -127,6 +160,9 @@ var vm = new Vue({
 
             $('#updateinfoModal').modal('show');
         },
+
+
+
         dateFilter: function(input) { var d = new Date(input); var year = d.getFullYear(); var month = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : "" + (d.getMonth() + 1); var day = d.getDate() < 10 ? "0" + d.getDate() : "" + d.getDate(); var hour = d.getHours() < 10 ? "0" + d.getHours() : "" + d.getHours(); var minutes = d.getMinutes() < 10 ? "0" + d.getMinutes() : "" + d.getMinutes(); var seconds = d.getSeconds() < 10 ? "0" + d.getSeconds() : "" + d.getSeconds(); return ( year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds ); },
 
         upnewfile: function () {

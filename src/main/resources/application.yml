@@ -14,6 +14,8 @@ spring:
       classpath: /templates/
   mvc:
     static-path-pattern: /**
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
 logging:
   config:
     classpath: log4j2.xml

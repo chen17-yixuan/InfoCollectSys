@@ -16,6 +16,7 @@ import com.chen17.utils.Excel.ExcelUtils;
 import com.chen17.utils.Excel.TitleMap;
 import com.chen17.utils.Excel.UploadUtil;
 import com.chen17.utils.TemporaryWork;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileNotFoundException;
@@ -34,6 +35,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -297,6 +299,9 @@ public class DayWorkController {
             value = {"updatetablevalue"},
             method = {RequestMethod.POST}
     )
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public String updateById(HttpServletRequest request) throws JsonProcessingException {
         if (request instanceof MultipartHttpServletRequest) {
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
@@ -304,6 +309,41 @@ public class DayWorkController {
             ObjectMapper mapper = new ObjectMapper();
             Dayerrorwork dw = (Dayerrorwork)mapper.readValue(s, Dayerrorwork.class);
             this.ds.updateByPrimaryKey(dw);
+            System.out.println("成功");
+            return "成功";
+        } else {
+            return "失败";
+        }
+    }
+    @RequestMapping(
+            value = {"updateByIds"},
+            method = {RequestMethod.POST}
+    )
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    public String updateByIds(HttpServletRequest request) throws JsonProcessingException {
+        if (request instanceof MultipartHttpServletRequest) {
+
+            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+            String ids = multipartRequest.getParameter("ids");
+            String s = multipartRequest.getParameter("updatedata");
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectMapper idmappers = new ObjectMapper();
+            ArrayList<Integer> list = (ArrayList)idmappers.readValue(ids, ArrayList.class);
+            Dayerrorwork dw = (Dayerrorwork)mapper.readValue(s, Dayerrorwork.class);
+
+            for(int id : list ){
+                Dayerrorwork dayerrorwork = this.ds.selectByPrimaryKey(id);
+
+                dayerrorwork.setErrortableRepairStatus(dw.getErrortableRepairStatus());
+                dayerrorwork.setErrortableNote(dw.getErrortableNote());
+                dayerrorwork.setErrortableFaultclassification(dw.getErrortableFaultclassification());
+                dayerrorwork.setErrortableDeviceExpriation(dw.getErrortableDeviceExpriation());
+                dayerrorwork.setErrortableBuildCompany(dw.getErrortableServercompany());
+
+                System.out.println(dayerrorwork.getErrortableId());
+                this.ds.updateByPrimaryKey(dayerrorwork);
+            }
             System.out.println("成功");
             return "成功";
         } else {
