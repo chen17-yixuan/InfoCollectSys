@@ -79,7 +79,16 @@ var vm = new Vue({
         },
 
         selectChecked: function (datecid){
-            alert(this.checkedall);
+
+            var pos = this.checkedids.indexOf(datecid);
+            if(pos != -1){
+                this.checkedids.splice(pos,1)
+            }else{
+                this.checkedids.push(datecid);
+            }
+
+
+
         },
 
         updateinfoModalByGroup: function () {
