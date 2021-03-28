@@ -343,14 +343,22 @@ public class DayWorkController {
             for(int id : list ){
                 Dayerrorwork dayerrorwork = this.ds.selectByPrimaryKey(id);
 
+
                 dayerrorwork.setErrortableRepairStatus(dw.getErrortableRepairStatus());
                 dayerrorwork.setErrortableNote(dw.getErrortableNote());
                 dayerrorwork.setErrortableFaultclassification(dw.getErrortableFaultclassification());
                 dayerrorwork.setErrortableDeviceExpriation(dw.getErrortableDeviceExpriation());
-                dayerrorwork.setErrortableBuildCompany(dw.getErrortableServercompany());
+                dayerrorwork.setErrortableServercompany(dw.getErrortableServercompany());
 
-                System.out.println(dayerrorwork.getErrortableId());
-                this.ds.updateByPrimaryKey(dayerrorwork);
+                Boolean fail1 = (dw.getErrortableFaultclassification()) != null;
+                Boolean fail2 = (dw.getErrortableServercompany()) != null;
+                Boolean fail3 = (dw.getErrortableDeviceExpriation()) != null;
+
+                if(fail1&&fail2&&fail3){
+                    this.ds.updateByPrimaryKey(dayerrorwork);
+                }else {
+                    return "fail1";
+                }
             }
             System.out.println("成功");
             return "成功";

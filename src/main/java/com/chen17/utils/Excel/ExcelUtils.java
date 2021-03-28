@@ -10,9 +10,8 @@ import com.alibaba.excel.metadata.Sheet;
 import com.chen17.domain.Dayerrorwork;
 import com.chen17.domain.UpLoadDayErrorWork;
 import com.chen17.utils.FileUtil;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -704,8 +703,22 @@ public class ExcelUtils {
                         httpServletResponse.setContentType("application/octet-stream");
                         httpServletResponse.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
                         httpServletResponse.flushBuffer();
+                        try{
+                            File file = new File("D:\\SlameHide",fileName);
+                            System.out.println(file.getAbsolutePath());
+                            if(!file.getParentFile().exists()){
+                                file.getParentFile().mkdirs();
+                            }
+                            file.createNewFile();
+                            OutputStream outputStream = new FileOutputStream(file);
+                            workbook.write(outputStream);
+                            outputStream.close();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                         workbook.write(httpServletResponse.getOutputStream());
                         workbook.close();
+
                         return;
                     }
 

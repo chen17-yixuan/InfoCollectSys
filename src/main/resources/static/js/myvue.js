@@ -112,15 +112,22 @@ var vm = new Vue({
                     }
                 })
                     .then(res => {
-                        this.search();
-                        $('#updateinfoModalByGroup').modal('hide');
-
+                        if(res.data == 'fail1'){
+                            alert("修改失败，请保证必填质保状态、维保单位、故障分类，并重试");
+                        }else{
+                            this.search();
+                            $('#updateinfoModalByGroup').modal('hide');
+                            this.errinfo.errortableServercompany = null;
+                            this.errinfo.errortableFaultclassification = null;
+                            this.errinfo.errortableDeviceExpriation = null;
+                            this.errinfo.errortableNote = null;
+                            this.errinfo.errortableRepairStatus = null;
+                            this.checkedids = [];
+                        }
                     })
                     .catch(err => {
                         alert("修改失败")
                     });
-
-                this.checkedids = [];
             }
         },
 
@@ -313,7 +320,7 @@ var vm = new Vue({
                 }
             })
                 .then(res => {
-                    $('#IPmyModal').modal('hide');
+                    $('#IPmyModal3').modal('hide');
                     console.log(res.data);
 
                     if (!res.data) {
