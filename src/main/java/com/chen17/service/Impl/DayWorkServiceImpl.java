@@ -96,4 +96,9 @@ public class DayWorkServiceImpl implements DayWorkService {
     public List<Dayerrorwork> selectByIpAddress(Map<String, List<String>> IpAddressMap) {
         return dayerrorworkDao.selectByIpAddress(IpAddressMap);
     }
+
+    @Override
+    public int insert(Dayerrorwork record) {
+        return dayerrorworkDao.insert(record);
+    }
 }

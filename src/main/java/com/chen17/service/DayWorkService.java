@@ -39,4 +39,6 @@ public interface DayWorkService {
     int updateByPrimaryKey(Dayerrorwork record);
 
     List<Dayerrorwork> selectByIpAddress(Map<String, List<String>> IpAddressMap);
+
+    int insert(Dayerrorwork record);
 }

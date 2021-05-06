@@ -18,16 +18,13 @@ import com.chen17.utils.Excel.UploadUtil;
 import com.chen17.utils.TemporaryWork;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -307,13 +304,11 @@ public class DayWorkController {
             value = {"updatetablevalue"},
             method = {RequestMethod.POST}
     )
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public String updateById(HttpServletRequest request) throws JsonProcessingException {
         if (request instanceof MultipartHttpServletRequest) {
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
             String s = multipartRequest.getParameter("updatedata");
+            System.out.println(s);
             ObjectMapper mapper = new ObjectMapper();
             Dayerrorwork dw = (Dayerrorwork)mapper.readValue(s, Dayerrorwork.class);
             this.ds.updateByPrimaryKey(dw);
@@ -323,6 +318,27 @@ public class DayWorkController {
             return "失败";
         }
     }
+
+    @RequestMapping(
+            value = {"insertNewRec"},
+            method = {RequestMethod.POST}
+    )
+    public String insertNewRec(HttpServletRequest request) throws JsonProcessingException {
+        if (request instanceof MultipartHttpServletRequest) {
+            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+            String s = multipartRequest.getParameter("insertdata");
+            ObjectMapper mapper = new ObjectMapper();
+            Dayerrorwork dw = (Dayerrorwork)mapper.readValue(s, Dayerrorwork.class);
+            dw.setErrortableLastestcheckTime(FileUtil.getDate());
+            dw.setErrortableRequestTime(new Date());
+            dw.setErrortableDianweiname(dw.getErrortableDianweiname()+"[大队上报]");
+            this.ds.insert(dw);
+            return "成功";
+        } else {
+            return "失败";
+        }
+    }
+
     @RequestMapping(
             value = {"updateByIds"},
             method = {RequestMethod.POST}

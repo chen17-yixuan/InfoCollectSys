@@ -20,6 +20,7 @@ var vm = new Vue({
         checkedall: "checked",
         checkedids: [],
         errortableRequestTimeShow: null,
+        errortableRequestTimeCache: null,
         errinfo: {
             errortableId: null,
             errortableCounty: null,
@@ -31,6 +32,7 @@ var vm = new Vue({
             errortableBuildCompany: null,
             errortableDeviceExpriation: null,
             errortableRepairStatus: null,
+            errortableShow: null,
             errortableRequestTime: null,
             errortableNote: null,
             errortableServercompany: null,
@@ -78,21 +80,24 @@ var vm = new Vue({
             }
         },
 
-        selectChecked: function (datecid){
+        selectChecked: function (datecid) {
 
             var pos = this.checkedids.indexOf(datecid);
-            if(pos != -1){
-                this.checkedids.splice(pos,1)
-            }else{
+            if (pos != -1) {
+                this.checkedids.splice(pos, 1)
+            } else {
                 this.checkedids.push(datecid);
             }
-
 
 
         },
 
         updateinfoModalByGroup: function () {
             $('#updateinfoModalByGroup').modal('show');
+        },
+
+        insertinfoModal: function () {
+            $('#insertinfoModal').modal('show');
         },
 
         updateinfoModalByGroupConfirm: function () {
@@ -112,9 +117,9 @@ var vm = new Vue({
                     }
                 })
                     .then(res => {
-                        if(res.data == 'fail1'){
+                        if (res.data == 'fail1') {
                             alert("修改失败，请保证必填质保状态、维保单位、故障分类，并重试");
-                        }else{
+                        } else {
                             this.search();
                             $('#updateinfoModalByGroup').modal('hide');
                             this.errinfo.errortableServercompany = null;
@@ -136,7 +141,7 @@ var vm = new Vue({
             let formData = new FormData();
             //file对应传过去的参数
             formData.append('updatedata', JSON.stringify(this.errinfo));
-
+            console.log(this.errinfo)
             axios({
                 method: 'post',
                 url: "/daywork/updatetablevalue",
@@ -156,6 +161,57 @@ var vm = new Vue({
                 });
         },
 
+        insertNewRec: function () {
+                if (this.errinfo.errortableCounty == null) {
+                    alert("区县不能为空")
+                    return;
+                }
+                if (this.errinfo.errortableDianweiname == null) {
+                    alert("点位名称不能为空")
+                    return;
+                }
+                if (this.errinfo.errortableDeviceIp == null) {
+                    alert("设备IP不能为空")
+                    return;
+                }
+                if (this.errinfo.errortableDeviceExpriation == null) {
+                    alert("质保情况不能为空")
+                    return;
+                }
+                if (this.errinfo.errortableServercompany == null) {
+                    alert("服务公司不能为空")
+                    return;
+                }
+                if (this.errinfo.errortableFaultclassification == null) {
+                    alert("故障分类:不能为空")
+                    return;
+                }
+
+
+                let formData = new FormData();
+                //file对应传过去的参数
+                formData.append('insertdata', JSON.stringify(this.errinfo));
+                console.log(this.errinfo)
+                axios({
+                    method: 'post',
+                    url: "/daywork/insertNewRec",
+                    data: formData,
+                    headers: {
+                        //文件头必须写，这是网址头
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                })
+                    .then(res => {
+                        alert("上传成功")
+                        $('#insertinfoModal').modal('hide');
+                        location.reload()
+                    })
+                    .catch(err => {
+                        alert("上传失败，请检查")
+                    });
+
+        },
+
         updateinfoModal: function (datec) {
             this.errinfo.errortableId = datec.errortableId;
             this.errinfo.errortableCounty = datec.errortableCounty;
@@ -166,8 +222,10 @@ var vm = new Vue({
             this.errinfo.errortableDeviceIp = datec.errortableDeviceIp;
             this.errinfo.errortableBuildCompany = datec.errortableBuildCompany;
             this.errinfo.errortableDeviceExpriation = datec.errortableDeviceExpriation;
+            this.errinfo.errortableShow = datec.errortableFaultclassification;
             this.errinfo.errortableRepairStatus = datec.errortableRepairStatus;
             this.errortableRequestTimeShow = this.dateFilter(datec.errortableRequestTime);
+            this.errinfo.errortableRequestTime = datec.errortableRequestTime;
             this.errinfo.errortableNote = datec.errortableNote;
             this.errinfo.errortableServercompany = datec.errortableServercompany;
             this.errinfo.errortableFaultclassification = datec.errortableFaultclassification;
@@ -178,8 +236,16 @@ var vm = new Vue({
         },
 
 
-
-        dateFilter: function(input) { var d = new Date(input); var year = d.getFullYear(); var month = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : "" + (d.getMonth() + 1); var day = d.getDate() < 10 ? "0" + d.getDate() : "" + d.getDate(); var hour = d.getHours() < 10 ? "0" + d.getHours() : "" + d.getHours(); var minutes = d.getMinutes() < 10 ? "0" + d.getMinutes() : "" + d.getMinutes(); var seconds = d.getSeconds() < 10 ? "0" + d.getSeconds() : "" + d.getSeconds(); return ( year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds ); },
+        dateFilter: function (input) {
+            var d = new Date(input);
+            var year = d.getFullYear();
+            var month = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : "" + (d.getMonth() + 1);
+            var day = d.getDate() < 10 ? "0" + d.getDate() : "" + d.getDate();
+            var hour = d.getHours() < 10 ? "0" + d.getHours() : "" + d.getHours();
+            var minutes = d.getMinutes() < 10 ? "0" + d.getMinutes() : "" + d.getMinutes();
+            var seconds = d.getSeconds() < 10 ? "0" + d.getSeconds() : "" + d.getSeconds();
+            return (year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds);
+        },
 
         upnewfile: function () {
             //校验文件是否是标准的XLSX格式
@@ -260,7 +326,7 @@ var vm = new Vue({
 
                     })
                     .catch(e => {
-						console.log(e)
+                        console.log(e)
                         alert("!!上传失败,请检查文件是否正确!!");
                     });
             }
@@ -372,7 +438,6 @@ var vm = new Vue({
             window.location.href = "/daywork/downloadfilemodelcounty?county=" + county;
 
         },
-
 
 
         //下面继续写方法 上传以filebasepload为id的文件框，到接口中
