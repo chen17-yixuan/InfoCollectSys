@@ -64,12 +64,12 @@
             <!-- 选项卡开始 -->
             <div class="tabbable" id="tabs-103786">
                 <ul class="nav nav-tabs">
-                    <li>
-                        <a href="#panel-264891" data-toggle="tab">早间任务</a>
-                    </li>
-                    <li>
-                        <a href="#panel-879448" data-toggle="tab">下午任务</a>
-                    </li>
+<!--                    <li>-->
+<!--                        <a href="#panel-264891" data-toggle="tab">早间任务</a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="#panel-879448" data-toggle="tab">下午任务</a>-->
+<!--                    </li>-->
                     <li class="active">
                         <a href="#panel-879446" data-toggle="tab">全局搜索</a>
                     </li>
@@ -253,7 +253,7 @@
                                 </option>
                                 <option value="文昌湖大队">文昌湖大队（大队自建）
                                 </option>
-                                <option value="已出质保">已出质保（昊泰）
+                                <option value="已出质保">已出质保（昊泰维修）
                                 </option>
                             </select>
                             </div>
@@ -882,13 +882,13 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th>属性</th>
+                            <th>属性（*必填）</th>
                             <th>信息</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td>*区县:（*必填）</td>
+                            <td>*区县:</td>
                             <td><select v-model="errinfo.errortableCounty" id="qx">
                                 <option value="张店区" selected>张店区
                                 </option>
@@ -1007,7 +1007,7 @@
                                 </option>
                                 <option value="文昌湖大队">文昌湖大队（自建）
                                 </option>
-                                <option value="已出质保">已出质保（昊泰）
+                                <option value="已出质保">已出质保（昊泰维修）
                                 </option>
                             </select></td>
                         </tr>
@@ -1037,7 +1037,7 @@
 
 
     <!-- 模态框（Modal） -->
-    <div class="modal fade" id="insertinfoModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    <div class="modal fade" id="IPmyModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
