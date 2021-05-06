@@ -332,6 +332,7 @@ public class DayWorkController {
             dw.setErrortableLastestcheckTime(FileUtil.getDate());
             dw.setErrortableRequestTime(new Date());
             dw.setErrortableDianweiname(dw.getErrortableDianweiname()+"[大队上报]");
+            dw.setErrortableNewcreate("新增");
             this.ds.insert(dw);
             return "成功";
         } else {
