@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen17.mapper.HkIncidentDao">
+  <resultMap id="BaseResultMap" type="com.chen17.domain.HkIncident">
+    <id column="Incident_ID" jdbcType="INTEGER" property="incidentId" />
+    <result column="DEVICE_SN" jdbcType="VARCHAR" property="deviceSn" />
+    <result column="Incident_DevName" jdbcType="VARCHAR" property="incidentDevname" />
+    <result column="Incident_Problem" jdbcType="VARCHAR" property="incidentProblem" />
+    <result column="Incident_SubProblem" jdbcType="VARCHAR" property="incidentSubproblem" />
+    <result column="Incident_Note" jdbcType="VARCHAR" property="incidentNote" />
+    <result column="Incident_FindTime" jdbcType="TIMESTAMP" property="incidentFindtime" />
+    <result column="Incident_Repair_Status" jdbcType="OTHER" property="incidentRepairStatus" />
+    <result column="Incident_Warrinty_Company" jdbcType="VARCHAR" property="incidentWarrintyCompany" />
+    <result column="Incident_Reason" jdbcType="VARCHAR" property="incidentReason" />
+    <result column="Incident_Reason_Note" jdbcType="VARCHAR" property="incidentReasonNote" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    Incident_ID, DEVICE_SN, Incident_DevName, Incident_Problem, Incident_SubProblem,
+    Incident_Note, Incident_FindTime, Incident_Repair_Status, Incident_Warrinty_Company,
+    Incident_Reason, Incident_Reason_Note
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from hk_incident
+    where Incident_ID = #{incidentId,jdbcType=INTEGER}
+  </select>
+    <select id="getAllIncidentSn" resultType="java.lang.String">
+
+      SELECT DEVICE_SN FROM hk_incident
+
+    </select>
+  <select id="selectByErrLimitOne" resultMap="BaseResultMap">
+
+    select
+    <include refid="Base_Column_List" />
+    from hk_incident  WHERE Incident_Repair_Status = '0'  AND Incident_FindTime <![CDATA[ < ]]> DATE(NOW())  LIMIT 1
+
+  </select>
+
+    <delete id="deleteBySN" parameterType="java.lang.String">
+      delete from hk_incident
+      where DEVICE_SN = #{deviceSn,jdbcType=VARCHAR}
+    </delete>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from hk_incident
+    where Incident_ID = #{incidentId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="Incident_ID" keyProperty="incidentId" parameterType="com.chen17.domain.HkIncident" useGeneratedKeys="true">
+    insert into hk_incident (DEVICE_SN, Incident_DevName, Incident_Problem,
+      Incident_SubProblem, Incident_Note, Incident_FindTime,
+      Incident_Repair_Status, Incident_Warrinty_Company,
+      Incident_Reason, Incident_Reason_Note)
+    values (#{deviceSn,jdbcType=VARCHAR}, #{incidentDevname,jdbcType=VARCHAR}, #{incidentProblem,jdbcType=VARCHAR},
+      #{incidentSubproblem,jdbcType=VARCHAR}, #{incidentNote,jdbcType=VARCHAR}, #{incidentFindtime,jdbcType=TIMESTAMP},
+      #{incidentRepairStatus,jdbcType=OTHER}, #{incidentWarrintyCompany,jdbcType=VARCHAR},
+      #{incidentReason,jdbcType=VARCHAR}, #{incidentReasonNote,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="Incident_ID" keyProperty="incidentId" parameterType="com.chen17.domain.HkIncident" useGeneratedKeys="true">
+    insert into hk_incident
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceSn != null">
+        DEVICE_SN,
+      </if>
+      <if test="incidentDevname != null">
+        Incident_DevName,
+      </if>
+      <if test="incidentProblem != null">
+        Incident_Problem,
+      </if>
+      <if test="incidentSubproblem != null">
+        Incident_SubProblem,
+      </if>
+      <if test="incidentNote != null">
+        Incident_Note,
+      </if>
+      <if test="incidentFindtime != null">
+        Incident_FindTime,
+      </if>
+      <if test="incidentRepairStatus != null">
+        Incident_Repair_Status,
+      </if>
+      <if test="incidentWarrintyCompany != null">
+        Incident_Warrinty_Company,
+      </if>
+      <if test="incidentReason != null">
+        Incident_Reason,
+      </if>
+      <if test="incidentReasonNote != null">
+        Incident_Reason_Note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deviceSn != null">
+        #{deviceSn,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentDevname != null">
+        #{incidentDevname,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentProblem != null">
+        #{incidentProblem,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentSubproblem != null">
+        #{incidentSubproblem,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentNote != null">
+        #{incidentNote,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentFindtime != null">
+        #{incidentFindtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="incidentRepairStatus != null">
+        #{incidentRepairStatus,jdbcType=OTHER},
+      </if>
+      <if test="incidentWarrintyCompany != null">
+        #{incidentWarrintyCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentReason != null">
+        #{incidentReason,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentReasonNote != null">
+        #{incidentReasonNote,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chen17.domain.HkIncident">
+    update hk_incident
+    <set>
+      <if test="deviceSn != null">
+        DEVICE_SN = #{deviceSn,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentDevname != null">
+        Incident_DevName = #{incidentDevname,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentProblem != null">
+        Incident_Problem = #{incidentProblem,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentSubproblem != null">
+        Incident_SubProblem = #{incidentSubproblem,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentNote != null">
+        Incident_Note = #{incidentNote,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentFindtime != null">
+        Incident_FindTime = #{incidentFindtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="incidentRepairStatus != null">
+        Incident_Repair_Status = #{incidentRepairStatus,jdbcType=OTHER},
+      </if>
+      <if test="incidentWarrintyCompany != null">
+        Incident_Warrinty_Company = #{incidentWarrintyCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentReason != null">
+        Incident_Reason = #{incidentReason,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentReasonNote != null">
+        Incident_Reason_Note = #{incidentReasonNote,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Incident_ID = #{incidentId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chen17.domain.HkIncident">
+    update hk_incident
+    set DEVICE_SN = #{deviceSn,jdbcType=VARCHAR},
+      Incident_DevName = #{incidentDevname,jdbcType=VARCHAR},
+      Incident_Problem = #{incidentProblem,jdbcType=VARCHAR},
+      Incident_SubProblem = #{incidentSubproblem,jdbcType=VARCHAR},
+      Incident_Note = #{incidentNote,jdbcType=VARCHAR},
+      Incident_FindTime = #{incidentFindtime,jdbcType=TIMESTAMP},
+      Incident_Repair_Status = #{incidentRepairStatus,jdbcType=OTHER},
+      Incident_Warrinty_Company = #{incidentWarrintyCompany,jdbcType=VARCHAR},
+      Incident_Reason = #{incidentReason,jdbcType=VARCHAR},
+      Incident_Reason_Note = #{incidentReasonNote,jdbcType=VARCHAR}
+    where Incident_ID = #{incidentId,jdbcType=INTEGER}
+  </update>
+  <update id="updateBySN">
+    update hk_incident
+    <set>
+      <if test="deviceSn != null">
+        DEVICE_SN = #{deviceSn,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentDevname != null">
+        Incident_DevName = #{incidentDevname,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentProblem != null">
+        Incident_Problem = #{incidentProblem,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentSubproblem != null">
+        Incident_SubProblem = #{incidentSubproblem,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentNote != null">
+        Incident_Note = #{incidentNote,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentFindtime != null">
+        Incident_FindTime = #{incidentFindtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="incidentRepairStatus != null">
+        Incident_Repair_Status = #{incidentRepairStatus,jdbcType=OTHER},
+      </if>
+      <if test="incidentWarrintyCompany != null">
+        Incident_Warrinty_Company = #{incidentWarrintyCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentReason != null">
+        Incident_Reason = #{incidentReason,jdbcType=VARCHAR},
+      </if>
+      <if test="incidentReasonNote != null">
+        Incident_Reason_Note = #{incidentReasonNote,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DEVICE_SN = #{deviceSn,jdbcType=VARCHAR}
+
+  </update>
+</mapper>

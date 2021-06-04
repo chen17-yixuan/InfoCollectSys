@@ -1,0 +1,12 @@
+<body>
+    <textarea cols="20" rows="10" id="test">用户定义的代码区域</textarea>
+	<button type="button"  onClick="copyUrl2()">CS</button>
+</body>
+<script type="text/javascript">
+function copyUrl2(){
+    var Url2=document.getElementById("test");
+    Url2.value="1231213";
+	Url2.select();
+	document.execCommand("Copy");
+}
+</script>

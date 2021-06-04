@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen17.mapper.HkDeviceListDao">
+  <resultMap id="BaseResultMap" type="com.chen17.domain.HkDeviceList">
+    <id column="DEVICE_SN" jdbcType="VARCHAR" property="deviceSn" />
+    <result column="DEVICE_NAME" jdbcType="VARCHAR" property="deviceName" />
+    <result column="DEVICE_ORG" jdbcType="VARCHAR" property="deviceOrg" />
+    <result column="DEVICE_AREA" jdbcType="VARCHAR" property="deviceArea" />
+    <result column="DEVICE_ISPRIORITY" jdbcType="OTHER" property="deviceIspriority" />
+    <result column="Search_DataTime" jdbcType="TIMESTAMP" property="searchDatatime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    DEVICE_SN, DEVICE_NAME, DEVICE_ORG, DEVICE_AREA, DEVICE_ISPRIORITY, Search_DataTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from hk_device_list
+    where DEVICE_SN = #{deviceSn,jdbcType=VARCHAR}
+  </select>
+  <select id="getAllArea" resultType="java.lang.String">
+
+    SELECT DEVICE_ORG FROM hk_device_list GROUP BY DEVICE_ORG
+
+  </select>
+  <select id="getORGAllNum" resultType="java.lang.Integer">
+
+    SELECT COUNT(*) FROM hk_device_list WHERE DEVICE_ORG =  #{deviceOrg,jdbcType=VARCHAR}
+
+  </select>
+  <select id="getORGErrNum" resultType="java.lang.Integer">
+
+    SELECT COUNT(*) FROM hk_device_list WHERE DEVICE_ORG =  #{deviceOrg,jdbcType=VARCHAR}  AND DEVICE_ISPRIORITY = '2'
+
+  </select>
+  <select id="getORGNorNum" resultType="java.lang.Integer">
+
+    SELECT COUNT(*) FROM hk_device_list WHERE DEVICE_ORG =  #{deviceOrg,jdbcType=VARCHAR} AND DEVICE_ISPRIORITY = '1'
+
+  </select>
+  <select id="selectByORGLimitOne" parameterType="java.lang.String" resultMap="BaseResultMap">
+
+    select
+    <include refid="Base_Column_List" />
+    from hk_device_list
+    where DEVICE_ORG = #{deviceOrg,jdbcType=VARCHAR}
+    AND DEVICE_ISPRIORITY = '0'
+    limit 1
+
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from hk_device_list
+    where DEVICE_SN = #{deviceSn,jdbcType=VARCHAR}
+  </delete>
+  <delete id="truncateList">
+
+truncate hk_device_list;
+
+  </delete>
+  <insert id="insert" keyColumn="DEVICE_SN" keyProperty="deviceSn" parameterType="com.chen17.domain.HkDeviceList" useGeneratedKeys="true">
+    insert into hk_device_list (DEVICE_SN ,DEVICE_NAME, DEVICE_ORG, DEVICE_AREA,
+      DEVICE_ISPRIORITY, Search_DataTime)
+    values (#{deviceSn,jdbcType=VARCHAR},#{deviceName,jdbcType=VARCHAR}, #{deviceOrg,jdbcType=VARCHAR}, #{deviceArea,jdbcType=VARCHAR},
+      #{deviceIspriority,jdbcType=OTHER}, #{searchDatatime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="DEVICE_SN" keyProperty="deviceSn" parameterType="com.chen17.domain.HkDeviceList" useGeneratedKeys="true">
+    insert into hk_device_list
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceName != null">
+        DEVICE_NAME,
+      </if>
+      <if test="deviceOrg != null">
+        DEVICE_ORG,
+      </if>
+      <if test="deviceArea != null">
+        DEVICE_AREA,
+      </if>
+      <if test="deviceIspriority != null">
+        DEVICE_ISPRIORITY,
+      </if>
+      <if test="searchDatatime != null">
+        Search_DataTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deviceName != null">
+        #{deviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceOrg != null">
+        #{deviceOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceArea != null">
+        #{deviceArea,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceIspriority != null">
+        #{deviceIspriority,jdbcType=OTHER},
+      </if>
+      <if test="searchDatatime != null">
+        #{searchDatatime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chen17.domain.HkDeviceList">
+    update hk_device_list
+    <set>
+      <if test="deviceName != null">
+        DEVICE_NAME = #{deviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceOrg != null">
+        DEVICE_ORG = #{deviceOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceArea != null">
+        DEVICE_AREA = #{deviceArea,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceIspriority != null">
+        DEVICE_ISPRIORITY = #{deviceIspriority,jdbcType=OTHER},
+      </if>
+      <if test="searchDatatime != null">
+        Search_DataTime = #{searchDatatime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where DEVICE_SN = #{deviceSn,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chen17.domain.HkDeviceList">
+    update hk_device_list
+    set DEVICE_NAME = #{deviceName,jdbcType=VARCHAR},
+      DEVICE_ORG = #{deviceOrg,jdbcType=VARCHAR},
+      DEVICE_AREA = #{deviceArea,jdbcType=VARCHAR},
+      DEVICE_ISPRIORITY = #{deviceIspriority,jdbcType=OTHER},
+      Search_DataTime = #{searchDatatime,jdbcType=TIMESTAMP}
+    where DEVICE_SN = #{deviceSn,jdbcType=VARCHAR}
+  </update>
+</mapper>

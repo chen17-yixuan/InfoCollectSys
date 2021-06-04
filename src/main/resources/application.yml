@@ -5,7 +5,7 @@ spring:
   datasource:
     username: azc_jjzd
     password: azc_conn
-    url: jdbc:mysql://chenshiqi.mysql.rds.aliyuncs.com:3306/azc_zb_exist_error_device?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://chenshiqi.mysql.rds.aliyuncs.com:3306/azc_zb_exist_error_device?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
@@ -16,6 +16,10 @@ spring:
     static-path-pattern: /**
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
 logging:
   config:
     classpath: log4j2.xml

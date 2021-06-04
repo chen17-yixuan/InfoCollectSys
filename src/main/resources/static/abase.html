@@ -1,1239 +1,1311 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <title>自运维系统</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 引入 Bootstrap -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-
-    <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
-    <script src="js/jquery.js"></script>
-    <!-- 包括所有已编译的插件 -->
-    <script src="js/bootstrap.min.js"></script>
-
-    <!-- VUE -->
-    <script src="js/vue.min.js"></script>
-    <script src="js/myvue.js"></script>
-    <script src="js/axios.min.js"></script>
-
-</head>
-<body>
-<div class="container-fluid" id="vue_det">
-    <div class="row-fluid">
-        <div class="span12">
-            <!-- 导航栏 -->
-            <nav class="navbar navbar-default" role="navigation">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <a class="navbar-brand" href="#">系统</a>
-                    </div>
-                    <div>
-                        <!--向左对齐-->
-                        <ul class="nav navbar-nav navbar-left">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    等待开发
-                                    <b class="caret"></b>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">jmeter</a></li>
-                                    <li><a href="#">EJB</a></li>
-                                    <li><a href="#">Jasper Report</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">分离的链接</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">另一个分离的链接</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <form class="navbar-form navbar-left" role="search">
-                            <button id="filebase" type="button" class="btn btn-default disabled" data-toggle="modal"
-                                    data-target="#upfilebasev">导入测试原表
-                            </button>
-                        </form>
-                        <a href="/daywork/downloadips">下载IP记录测试表</a>
-                        <!--向右对齐-->
-
-                        <p class="navbar-text navbar-right" id="nowtimes"></p>
-
-                    </div>
-                </div>
-            </nav>
-            <!-- 导航栏结束 -->
-            <!-- 选项卡开始 -->
-            <div class="tabbable" id="tabs-103786">
-                <ul class="nav nav-tabs">
-                    <li>
-                        <a href="#panel-264891" data-toggle="tab">早间任务</a>
-                    </li>
-                    <li>
-                        <a href="#panel-879448" data-toggle="tab">下午任务</a>
-                    </li>
-                    <li class="active">
-                        <a href="#panel-879446" data-toggle="tab">全局搜索</a>
-                    </li>
-                    <li>
-                        <a href="#panel-8794S" data-toggle="tab">海康巡检</a>
-                    </li>
-                    <li>
-                        <a href="#panel-87977S" data-toggle="tab">大队反馈</a>
-                    </li>
-                </ul>
-                <div class="tab-content" style="font-size: large;">
-                    <div class="tab-pane" id="panel-264891">
-                        <!-- 任务列表表格 -->
-                        <table class="table text-center">
-                            <tbody>
-                            <tr v-bind:class="{'success':pmcheckanddeleteclass}">
-                                <td>在故障表中删除恢复了的故障</td>
-                                <td>{{pmcheckanddelete}}</td>
-                                <td>
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#IPmyModal3">直接删除
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>制作给公司技术人员的未知原因故障表</td>
-                                <td>单表直接下载</td>
-                                <td>
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#printModel">选择下载
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>导出故障分表</td>
-                                <td>选择下载</td>
-                                <td>
-                                    <button class="btn btn-default" data-toggle="modal"
-                                            data-target="#chooseerrorreasonmodel">单步执行
-                                    </button>
-                                </td>
-                            </tr>
-
-                            <tr class="warning">
-                                <td>导出故障总表</td>
-                                <td>直接下载</td>
-                                <td>
-                                    <button class="btn btn-default" v-on:click="getmaintalbe">直接导出</button>
-                                </td>
-                            </tr>
-
-                            </tbody>
-                        </table>
-                        <button type="button" class="btn btn-primary btn-lg btn-block">全部执行并生成最终文件组</button>
-                    </div>
-
-                    <!-- 下午任务 -->
-                    <div class="tab-pane" id="panel-879448">
-                        <table class="table text-center">
-                            <tbody>
-                            <tr v-bind:class="{'success':uploadstateclass}">
-                                <td>上传并处理故障记录</td>
-                                <td><a class="btn btn-default" href="modelexcel/updatetemlate.xlsx"
-                                       role="button">下载模板文件</a></td>
-                                <td>
-                                    <button id="file" class="btn btn-default" data-toggle="modal"
-                                            data-target="#uploadCheck">上传文件
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr v-bind:class="{'success':pmcheckanddeleteclass}">
-                                <td>在故障表中删除恢复了的故障</td>
-                                <td>{{pmcheckanddelete}}</td>
-                                <td>
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#IPmyModal3">直接删除
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>下载下发到各公司的故障(全部故障)</td>
-                                <td>直接执行，分步下载</td>
-                                <td>
-                                    <button class="btn btn-default" data-toggle="modal"
-                                            data-target="#choosecompanymodel">打开选择下载公司
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>下载下发到各大队的故障(全部故障)</td>
-                                <td>直接执行，分步下载</td>
-                                <td>
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#choosedaduimodel">
-                                        打开选择下载大队
-                                    </button>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>生成全市道路交通前端科技设备在线率统计表</td>
-                                <td>上传每日导出文件</td>
-                                <td>
-                                    <input id="zxltjfile" type="file" name="zxltjfile"
-                                           class="center-block btn-primary"></input>
-                                    <button class="btn btn-default" v-on:click="upallexporttable">上传文件</button>
-                                </td>
-                            </tr>
-
-                            </tbody>
-                        </table>
-                        <button type="button" class="btn btn-primary btn-lg btn-block">全部执行并生成最终文件组</button>
-                        </p>
-                    </div>
-
-                    <div class="tab-pane  active" id="panel-879446">
-                        <div class="col-md-12" style="text-align: center; background-color: #9d9d9d">
-                            <div class="col-md-12"><h3 align="center"> 选择下方搜索框内容进行查找,双击修改信息</h3></div>
-                            <div class="col-md-1">
-                                选择区县<select class="form-control" v-model="county" name="county" v-on:change="search">
-                                <option>
-                                </option>
-                                <option value="张店区">张店区
-                                </option>
-                                <option value="淄川区">淄川区
-                                </option>
-                                <option value="博山区">博山区
-                                </option>
-                                <option value="周村区">周村区
-                                </option>
-                                <option value="临淄区">临淄区
-                                </option>
-                                <option value="桓台县">桓台县
-                                </option>
-                                <option value="沂源县">沂源县
-                                </option>
-                                <option value="高青县">高青县
-                                </option>
-                                <option value="高新区">高新区
-                                </option>
-                                <option value="文昌湖区">文昌湖区
-                                </option>
-                            </select>
-                            </div>
-                            <div class="col-md-1">
-                                点位名称<input class="form-control" type="text" name="sbip" v-model="dwname"
-                                           v-on:change="search" placeholder="点位名称"/>
-                            </div>
-                            <div class="col-md-2">
-                                海康平台名称<input class="form-control" type="text" name="sbip" v-model="hkname"
-                                             v-on:change="search" placeholder="海康平台名称"/>
-                            </div>
-                            <div class="col-md-2">
-                                IP地址<input class="form-control" type="text" name="sbip" v-model="sbip"
-                                           v-on:change="search" placeholder="IP地址"/>
-                            </div>
-                            <div class="col-md-1" style="background-color: #777777;padding-bottom: 10px">
-                                维保单位<select class="form-control" v-model="wbdw" name="wbdw" v-on:change="search">
-                                <option>
-                                </option>
-                                <option value="三棱">三棱(未出保)</option>
-                                <option value="易华录">易华录(未出保)
-                                </option>
-                                <option value="华迪">华迪(未出保)
-                                </option>
-                                <option value="广宁">广宁(未出保)
-                                </option>
-                                <option value="张店大队">张店大队（大队自建）
-                                </option>
-                                <option value="淄川大队">淄川大队（大队自建）
-                                </option>
-                                <option value="博山大队">博山大队（大队自建）
-                                </option>
-                                <option value="周村大队">周村大队（大队自建）
-                                </option>
-                                <option value="临淄大队">临淄大队（大队自建）
-                                </option>
-                                <option value="桓台大队">桓台大队（大队自建）
-                                </option>
-                                <option value="沂源大队">沂源大队（大队自建）
-                                </option>
-                                <option value="高青大队">高青大队（大队自建）
-                                </option>
-                                <option value="高新区大队">高新区大队（大队自建）
-                                </option>
-                                <option value="文昌湖大队">文昌湖大队（大队自建）
-                                </option>
-                                <option value="已出质保">已出质保（昊泰）
-                                </option>
-                            </select>
-                            </div>
-                            <div class="col-md-1" style="background-color: #777777;padding-bottom: 10px">
-                                故障分类<select class="form-control" v-model="gzfl" name="gzfl" v-on:change="search">
-                                <option>
-                                </option>
-                                <option value="停运">停运
-                                </option>
-                                <option value="供电">供电
-                                </option>
-                                <option value="设备故障">设备故障
-
-                                </option>
-                                <option value="网络联通">网络联通
-                                </option>
-                                <option value="网络广电">网络广电
-                                </option>
-                                <option value="网络移动">网络移动
-                                </option>
-                                <option value="正在维修">正在维修
-                                </option>
-
-                            </select>
-                            </div>
-                            <div class="col-md-1" style="background-color: #777777;padding-bottom: 10px">
-                                是否新增<select class="form-control" v-model="sfxz" name="sfxz" v-on:change="search">
-                                <option>
-                                </option>
-                                <option value="新增">新增
-                                </option>
-                                <option>原有
-                                </option>
-                            </select>
-                            </div>
-                            <div class="col-md-1" style="background-color: #777777;padding-bottom: 10px">
-                                左侧条件
-                                <button class="btn btn-primary" type="button"
-                                        v-on:click="getpmtablebycompany(wbdw,null,gzfl)">下载筛选
-                                </button>
-                            </div>
-                            <div class="col-md-1">
-                                <!--										<button type="button" v-on:click="deletebyids('null')">批量删除</button>-->
-                                S列选中项
-                                <button class="btn btn-primary" type="button" v-on:click="updateinfoModalByGroup()">
-                                    批量修改
-                                </button>
-                            </div>
-                            <div class="col-md-1">
-                                <!--										<button type="button" v-on:click="deletebyids('null')">批量删除</button>-->
-                                自助上报
-                                <button class="btn btn-primary" type="button" v-on:click="insertinfoModal()">
-                                    上报故障
-                                </button>
-                            </div>
-                        </div>
-                        <!--								显示区-->
-                        <div class="panel-body"
-                             style="width : 100% ;height: 720px ; overflow-x: auto ; overflow-y: auto">
-                            <table class="table table-hover table-responsive"
-                                   style="TABLE-LAYOUT: fixed; WORD-BREAK: break-all;">
-                                <thead>
-                                <tr>
-                                    <th>S</th>
-                                    <th>区县</th>
-                                    <th>点位名称</th>
-                                    <th>海康平台名称</th>
-                                    <th>设备
-                                    </th>
-                                    <th>IP
-                                    </th>
-                                    <th>建设单位
-                                    </th>
-                                    <th>质保状态
-                                    </th>
-                                    <th>备注
-                                    </th>
-                                    <th class="info">维保单位</th>
-                                    <th class="info">故障分类</th>
-                                    <th class="info">是否新增</th>
-                                </tr>
-
-                                </thead>
-
-
-                                <tbody>
-                                <tr v-for="datec in datecontent" style="font-size: small ; cursor: pointer"
-                                    v-on:dblclick="updateinfoModal(datec)"
-                                    v-on:click="selectChecked(datec.errortableId)">
-
-
-                                    <td><input id="{{datec.errortableId}}" type="checkbox"
-                                               v-bind:value="datec.errortableId" v-model="checkedids"
-                                               v-bind:checked="checkedall"></td>
-                                    <td>{{datec.errortableCounty}}</td>
-                                    <td>{{datec.errortableDianweiname}}</td>
-                                    <td>{{datec.errortableHaikangpname}}</td>
-                                    <td>{{datec.errortableDeviceType}}</td>
-                                    <td>{{datec.errortableDeviceIp}}</td>
-                                    <td>{{datec.errortableBuildCompany}}</td>
-                                    <td>{{datec.errortableDeviceExpriation}}</td>
-                                    <td>{{datec.errortableNote}}</td>
-                                    <td>{{datec.errortableServercompany}}</td>
-                                    <td>{{datec.errortableFaultclassification}}</td>
-
-                                    <td>{{datec.errortableNewcreate}}</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-
-                    <div class="tab-pane" id="panel-8794S">
-
-                        <!-- 海康视频巡检 -->
-                        <div class="col-md-12">
-
-                        </div>
-
-                    </div>
-
-                    <div class="tab-pane" id="panel-87977S">
-
-                        <!-- 海康大队反馈 -->
-
-                    </div>
-                </div>
-                <!-- 切换选项卡结束 -->
-            </div>
-        </div>
-    </div>
-
-
-    <!-- 上传每日新增的模态框 -->
-    <div class="modal fade" id="uploadCheck" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- 上传文件的表单 -->
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">
-                        请选择上传的文件
-                    </h4>
-                </div>
-                <div class="modal-body" style="text-align: center;">
-                    请注意：必须按照格式填写，最后四列必须按照格式内填写
-                    <br>
-                    <hr>
-                    <h2>{{uploadstate}}</h2>
-                    <hr>
-                    <br>
-                    <input id="fileunewpload" type="file" name="file" class="center-block btn-primary btn-lg"></input>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                    </button>
-                    <button type="button" class="btn btn-primary" v-on:click="upnewfile">
-                        上传文件
-                    </button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <!-- 加载中模态框 -->
-    <div class="modal fade" id="loadinginfo" tabindex="-1" role="dialog" aria-labelledby="loadingTitle"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-
-                    <h4 class="modal-title" id="loadingTitle">
-                        加载执行中
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    Loading.....加载中
-                </div>
-
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal -->
-    </div>
-
-
-    <!-- 选择公司下载对应报表（Modal） -->
-    <div class="modal fade" id="choosecompanymodel" tabindex="-1" role="dialog"
-         aria-labelledby="choosecompanymodeltitle"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- 上传文件的表单 -->
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    </button>
-                    <h4 class="modal-title" id="choosecompanymodeltitle">
-                        请选择公司名称按钮下载
-                    </h4>
-                </div>
-                <div class="modal-body" style="text-align: center;">
-
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("三棱","未出保",null)>三棱
-                        </button>
-                    </div>
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button id="company2" type="button" class="btn btn-primary btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("华迪","未出保",null)>华迪
-                        </button>
-                    </div>
-
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button id="company3" type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("广宁","未出保",null)>广宁
-                        </button>
-                    </div>
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button id="company4" type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("易华录","未出保",null)>易华录
-                        </button>
-                    </div>
-
-                    <div class="col-md-12" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("已出质保",null,null)>已出保
-                        </button>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                        </button>
-                    </div>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-
-    <!-- 选择大队下载对应报表（Modal） -->
-    <div class="modal fade" id="choosedaduimodel" tabindex="-1" role="dialog" aria-labelledby="choosedaduimodeltitle"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- 上传文件的表单 -->
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
-                    </button>
-                    <h4 class="modal-title" id="choosedaduimodeltitle">
-                        请选择大队名称按钮下载
-                    </h4>
-                </div>
-                <div class="modal-body" style="text-align: center;">
-
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("张店大队",null,null)>张店大队
-                        </button>
-                    </div>
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("淄川大队",null,null)>淄川大队
-                        </button>
-                    </div>
-
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("博山大队",null,null)>博山大队
-                        </button>
-                    </div>
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("周村大队",null,null)>周村大队
-                        </button>
-                    </div>
-
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("临淄大队",null,null)>临淄大队
-                        </button>
-                    </div>
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("桓台大队",null,null)>桓台大队
-                        </button>
-                    </div>
-
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("沂源大队",null,null)>沂源大队
-                        </button>
-                    </div>
-
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("高青大队",null,null)>高青大队
-                        </button>
-                    </div>
-
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("高新区大队",null,null)>高新区大队
-                        </button>
-                    </div>
-
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("文昌湖大队",null,null)>文昌湖大队
-                        </button>
-                    </div>
-
-                    <div class="col-md-12" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycounty("张店区")>张店大队全部
-                        </button>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                        </button>
-                    </div>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-
-    <!-- 选择以故障原因分类下载对应报表（Modal） -->
-    <div class="modal fade" id="chooseerrorreasonmodel" tabindex="-1" role="dialog"
-         aria-labelledby="chooseerrorreasomodeltitle"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- 上传文件的表单 -->
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
-                    </button>
-                    <h4 class="modal-title" id="chooseerrorreasomodeltitle">
-                        请选择故障分类名称按钮下载
-                    </h4>
-                </div>
-                <div class="modal-body" style="text-align: center;">
-
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebyerrortype("停运")>停运
-                        </button>
-                    </div>
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebyerrortype("供电")>供电
-                        </button>
-                    </div>
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebyerrortype("网络")>网络
-                        </button>
-                    </div>
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebyerrortype("设备故障")>设备故障
-                        </button>
-                    </div>
-
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebyifinpro("未出质保")>质保期内故障
-                        </button>
-                    </div>
-
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebyifinpro("已出质保")>质保期外故障
-                        </button>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                        </button>
-                    </div>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-
-    <!-- 上传源文件表用到的模态框 -->
-    <div class="modal fade" id="upfilebasev" tabindex="-1" role="dialog" aria-labelledby="myModalLabeupbase"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- 上传文件的表单 -->
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
-                    </button>
-                    <h4 class="modal-title" id="myModalLabeupbase">
-                        请选择上传的文件
-                    </h4>
-                </div>
-                <div class="modal-body" style="text-align: center;">
-                    请注意：必须按照格式填写，最后四列必须按照格式内填写
-                    <br>
-                    <hr>
-                    <h2>{{uploadstate}}</h2>
-                    <hr>
-                    <br>
-                    <input id="filebasepload" type="file" name="basefile"
-                           class="center-block btn-primary btn-lg"></input>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                    </button>
-                    <button type="button" class="btn btn-primary" v-on:click="upnewfilebase">
-                        上传文件
-                    </button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <!-- 修改信息模态框（Modal） -->
-    <div class="modal fade" id="updateinfoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabelss"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        &times;
-                    </button>
-                    <h4 class="modal-title" id="myModalLabelss">
-                        基本信息修改
-                    </h4>
-                </div>
-                <div class="modal-body">
-
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>属性</th>
-                            <th>信息</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>对应的ID号(不可修改):</td>
-                            <td>{{errinfo.errortableId}}</td>
-                        </tr>
-                        <tr>
-                            <td>区县:</td>
-                            <td><select v-model="errinfo.errortableCounty" v-bind:value="errinfo.errortableCounty">
-                                <option>
-                                </option>
-                                <option value="张店区">张店区
-                                </option>
-                                <option value="淄川区">淄川区
-                                </option>
-                                <option value="博山区">博山区
-                                </option>
-                                <option value="周村区">周村区
-                                </option>
-                                <option value="临淄区">临淄区
-                                </option>
-                                <option value="桓台县">桓台县
-                                </option>
-                                <option value="沂源县">沂源县
-                                </option>
-                                <option value="高青县">高青县
-                                </option>
-                                <option value="高新区">高新区
-                                </option>
-                                <option value="文昌湖区">文昌湖区
-                                </option>
-                            </select></td>
-                        </tr>
-                        <tr>
-                            <td>点位名称:</td>
-                            <td>{{errinfo.errortableDianweiname}}</td>
-                        </tr>
-                        <tr>
-                            <td>海康平台名称:</td>
-                            <td>{{errinfo.errortableHaikangpname}}</td>
-                        </tr>
-                        <tr>
-                            <td>海信平台名称:</td>
-                            <td>{{errinfo.errortableHaixinpname}}</td>
-                        </tr>
-                        <tr>
-                            <td>设备类型:</td>
-                            <td>{{errinfo.errortableDeviceType}}</td>
-                        </tr>
-                        <tr>
-                            <td>设备IP:</td>
-                            <td>{{errinfo.errortableDeviceIp}}</td>
-                        </tr>
-                        <tr>
-                            <td>建设单位:</td>
-                            <td>{{errinfo.errortableBuildCompany}}</td>
-                        </tr>
-                        <tr>
-                            <td>质保情况:</td>
-                            <td>
-                                <select v-model="errinfo.errortableDeviceExpriation"
-                                        v-bind:value="errinfo.errortableDeviceExpriation">
-                                    <option>
-                                    </option>
-                                    <option value="未出保">未出保
-                                    </option>
-                                    <option value="出保">出保
-                                    </option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>维修情况:</td>
-                            <td><input type="text" name="sbip" v-model="errinfo.errortableRepairStatus"
-                                       v-bind:value="errinfo.errortableRepairStatus"/></td>
-                        </tr>
-                        <tr>
-                            <td>请求时间:</td>
-                            <td>{{errortableRequestTimeShow}}</td>
-                        </tr>
-                        <tr>
-                            <td>备注:</td>
-                            <td><input type="text" name="sbip" v-model="errinfo.errortableNote"
-                                       v-bind:value="errinfo.errortableNote"/></td>
-                        </tr>
-                        <tr>
-                            <td>服务公司:</td>
-                            <td><select v-model="errinfo.errortableServercompany"
-                                        v-bind:value="errinfo.errortableServercompany">
-                                <option value="三棱">三棱</option>
-                                <option value="易华录">易华录
-                                </option>
-                                <option value="华迪">华迪
-                                </option>
-                                <option value="广宁">广宁
-                                </option>
-                                <option value="张店大队">张店大队
-                                </option>
-                                <option value="淄川大队">淄川大队
-                                </option>
-                                <option value="博山大队">博山大队
-                                </option>
-                                <option value="周村大队">周村大队
-                                </option>
-                                <option value="临淄大队">临淄大队
-                                </option>
-                                <option value="桓台大队">桓台大队
-                                </option>
-                                <option value="沂源大队">沂源大队
-                                </option>
-                                <option value="高青大队">高青大队
-                                </option>
-                                <option value="高新区大队">高新区大队
-                                </option>
-                                <option value="文昌湖大队">文昌湖大队
-                                </option>
-                                <option value="已出质保">已出质保
-                                </option>
-                            </select></td>
-                        </tr>
-                        <tr>
-                            <td>故障分类:</td>
-                            <td><select v-model="errinfo.errortableFaultclassification"
-                                        v-bind:value="errinfo.errortableFaultclassification">
-                                <option value="停运">停运
-                                </option>
-                                <option value="供电">供电
-                                </option>
-                                <option value="设备故障">设备故障
-
-                                </option>
-                                <option value="网络联通">网络联通
-                                </option>
-                                <option value="网络广电">网络广电
-                                </option>
-                                <option value="网络移动">网络移动
-                                </option>
-                                <option value="正在维修">正在维修
-                                </option>
-                            </select></td>
-                        </tr>
-                        <tr>
-                            <td>是否新增:</td>
-                            <td><select v-model="errinfo.errortableNewcreate"
-                                        v-bind:value="errinfo.errortableNewcreate">
-                                <option value="新增">新增
-                                </option>
-                                <option>原有
-                                </option>
-                            </select></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" v-on:click="deletebyids(errinfo.errortableId)">
-                        删除该记录
-                    </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                    </button>
-                    <button type="button" class="btn btn-primary" v-on:click="updatebyid">
-                        提交更改
-                    </button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal -->
-    </div>
-
-    <div class="modal fade" id="insertinfoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabelss"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        &times;
-                    </button>
-                    <h4 class="modal-title" id="insertinfoModalh">
-                        基本信息新增
-                    </h4>
-                </div>
-                <div class="modal-body">
-
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>属性</th>
-                            <th>信息</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>*区县:（*必填）</td>
-                            <td><select v-model="errinfo.errortableCounty" id="qx">
-                                <option value="张店区" selected>张店区
-                                </option>
-                                <option value="淄川区">淄川区
-                                </option>
-                                <option value="博山区">博山区
-                                </option>
-                                <option value="周村区">周村区
-                                </option>
-                                <option value="临淄区">临淄区
-                                </option>
-                                <option value="桓台县">桓台县
-                                </option>
-                                <option value="沂源县">沂源县
-                                </option>
-                                <option value="高青县">高青县
-                                </option>
-                                <option value="高新区">高新区
-                                </option>
-                                <option value="文昌湖区">文昌湖区
-                                </option>
-                            </select></td>
-                        </tr>
-                        <tr>
-                            <td>*点位名称:</td>
-                            <td><input type="text" v-model="errinfo.errortableDianweiname"> </td>
-                        </tr>
-                        <tr>
-                            <td>*海康平台名称(下同):</td>
-                            <td><input type="text" v-model="errinfo.errortableHaikangpname"> </td>
-                        </tr>
-                        <tr>
-                            <td>*海信平台名称:</td>
-                            <td><input type="text" v-model="errinfo.errortableHaixinpname"></td>
-                        </tr>
-                        <tr>
-                            <td>*设备类型:</td>
-                            <td>
-                                <select v-model="errinfo.errortableDeviceType"
-                                >
-                                    <option value="电警相机">电警相机
-                                    </option>
-                                    <option value="卡口相机">卡口相机
-                                    </option>
-                                     <option value="反向卡口相机">反向卡口相机
-                                    </option>
-                                     <option value="全景相机">全景相机
-                                    </option>
-                                     <option value="违停球机">违停球机
-                                    </option>
-                                    <option value="微电警">微电警
-                                    </option>
-
-
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>*设备IP:(无IP填写：169.0.0.0)</td>
-                            <td><input type="text" v-model="errinfo.errortableDeviceIp" placeholder="169.0.0.0"></td>
-                        </tr>
-                        <tr>
-                            <td>*建设单位:</td>
-                            <td><input type="text" v-model="errinfo.errortableBuildCompany"></td>
-                        </tr>
-                        <tr>
-                            <td>*质保情况:</td>
-                            <td>
-                                <select v-model="errinfo.errortableDeviceExpriation"
-                                        >
-                                    <option value="未出保">未出保
-                                    </option>
-                                    <option value="出保">出保
-                                    </option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>故障情况:</td>
-                            <td><input type="text" name="sbip" v-model="errinfo.errortableRepairStatus"
-                                       /></td>
-                        </tr>
-                        <tr>
-                            <td>备注:</td>
-                            <td><input type="text" name="sbip" v-model="errinfo.errortableNote"
-                                       /></td>
-                        </tr>
-                        <tr>
-                            <td>*服务公司:</td>
-                            <td><select v-model="errinfo.errortableServercompany"
-                                        >
-                                <option value="三棱">三棱（未出保）</option>
-                                <option value="易华录">易华录（未出保）
-                                </option>
-                                <option value="华迪">华迪（未出保）
-                                </option>
-                                <option value="广宁">广宁（未出保）
-                                </option>
-                                <option value="张店大队">张店大队（自建）
-                                </option>
-                                <option value="淄川大队">淄川大队（自建）
-                                </option>
-                                <option value="博山大队">博山大队（自建）
-                                </option>
-                                <option value="周村大队">周村大队（自建）
-                                </option>
-                                <option value="临淄大队">临淄大队（自建）
-                                </option>
-                                <option value="桓台大队">桓台大队（自建）
-                                </option>
-                                <option value="沂源大队">沂源大队（自建）
-                                </option>
-                                <option value="高青大队">高青大队（自建）
-                                </option>
-                                <option value="高新区大队">高新区大队（自建）
-                                </option>
-                                <option value="文昌湖大队">文昌湖大队（自建）
-                                </option>
-                                <option value="已出质保">已出质保（昊泰）
-                                </option>
-                            </select></td>
-                        </tr>
-                        <tr>
-                            <td>*故障分类:</td>
-                            <td><select v-model="errinfo.errortableFaultclassification">
-                                <option value="正在维修">正在维修
-                                </option>
-                            </select></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <!--                    <button type="button" class="btn btn-danger" v-on:click="deletebyids(errinfo.errortableId)">-->
-                    <!--                        删除该记录-->
-                    <!--                    </button>-->
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                    </button>
-                    <button type="button" class="btn btn-primary" v-on:click="insertNewRec">
-                        提交更改
-                    </button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal -->
-    </div>
-
-
-    <!-- 模态框（Modal） -->
-    <div class="modal fade" id="IPmyModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel6">
-                        录入已恢复的ip信息，以标准的JSON格式
-                    </h4>
-                </div>
-                <div class="modal-body">
+	<head>
+		<meta charset="UTF-8">
+		<title>自运维系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- 引入 Bootstrap -->
+		<link href="css/bootstrap.css" rel="stylesheet">
+
+		<!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+		<script src="js/jquery.js"></script>
+		<!-- 包括所有已编译的插件 -->
+		<script src="js/bootstrap.min.js"></script>
+
+		<!-- VUE -->
+		<script src="js/vue.min.js"></script>
+		<script src="js/myvue.js"></script>
+		<script src="js/axios.min.js"></script>
+
+	</head>
+	<body>
+		<div class="container-fluid" id="vue_det">
+			<div class="row-fluid">
+				<div class="span12">
+					<!-- 导航栏 -->
+					<nav class="navbar navbar-default" role="navigation">
+						<div class="container-fluid">
+							<div class="navbar-header">
+								<a class="navbar-brand" href="#">系统</a>
+							</div>
+							<!-- <div> -->
+							<!--向左对齐-->
+							<!-- <ul class="nav navbar-nav navbar-left">
+									<li class="dropdown">
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+											等待开发
+											<b class="caret"></b>
+										</a>
+										<ul class="dropdown-menu">
+											<li><a href="#">jmeter</a></li>
+											<li><a href="#">EJB</a></li>
+											<li><a href="#">Jasper Report</a></li>
+											<li class="divider"></li>
+											<li><a href="#">分离的链接</a></li>
+											<li class="divider"></li>
+											<li><a href="#">另一个分离的链接</a></li>
+										</ul>
+									</li>
+								</ul> -->
+							<!--                        <form class="navbar-form navbar-left" role="search">-->
+							<!--                            <button id="filebase" type="button" class="btn btn-default disabled" data-toggle="modal"-->
+							<!--                                    data-target="#upfilebasev">导入测试原表-->
+							<!--                            </button>-->
+							<!--                        </form>-->
+							<!--                        <a href="/daywork/downloadips">下载IP记录测试表</a>-->
+							<!--向右对齐-->
+
+							<!-- 	<p class="navbar-text navbar-right" id="nowtimes"></p>
+
+							</div> -->
+						</div>
+					</nav>
+					<!-- 导航栏结束 -->
+					<!-- 选项卡开始 -->
+					<div class="tabbable" id="tabs-103786">
+						<ul class="nav nav-tabs">
+							<li>
+								<a href="#panel-264891" data-toggle="tab">早间任务</a>
+							</li>
+							<li>
+								<a href="#panel-879448" data-toggle="tab">下午任务</a>
+							</li>
+							<li class="active">
+								<a href="#panel-879446" data-toggle="tab">全局搜索</a>
+							</li>
+							<li>
+								<a href="#panel-8794S" data-toggle="tab">海康巡检</a>
+							</li>
+							<li>
+								<a href="#panel-87977S" data-toggle="tab">大队反馈</a>
+							</li>
+						</ul>
+						<div class="tab-content" style="font-size: large;">
+							<div class="tab-pane" id="panel-264891">
+								<!-- 任务列表表格 -->
+								<table class="table text-center">
+									<tbody>
+										<tr v-bind:class="{'success':pmcheckanddeleteclass}">
+											<td>在故障表中删除恢复了的故障</td>
+											<td>{{pmcheckanddelete}}</td>
+											<td>
+												<button class="btn btn-default" data-toggle="modal" data-target="#IPmyModal3">直接删除
+												</button>
+											</td>
+										</tr>
+										<tr>
+											<td>制作给公司技术人员的未知原因故障表</td>
+											<td>单表直接下载</td>
+											<td>
+												<button class="btn btn-default" data-toggle="modal" data-target="#printModel">选择下载
+												</button>
+											</td>
+										</tr>
+										<tr>
+											<td>导出故障分表</td>
+											<td>选择下载</td>
+											<td>
+												<button class="btn btn-default" data-toggle="modal" data-target="#chooseerrorreasonmodel">单步执行
+												</button>
+											</td>
+										</tr>
+
+										<tr class="warning">
+											<td>导出故障总表</td>
+											<td>直接下载</td>
+											<td>
+												<button class="btn btn-default" v-on:click="getmaintalbe">直接导出</button>
+											</td>
+										</tr>
+
+									</tbody>
+								</table>
+								<button type="button" class="btn btn-primary btn-lg btn-block">全部执行并生成最终文件组</button>
+							</div>
+
+							<!-- 下午任务 -->
+							<div class="tab-pane" id="panel-879448">
+								<table class="table text-center">
+									<tbody>
+										<tr v-bind:class="{'success':uploadstateclass}">
+											<td>上传并处理故障记录</td>
+											<td><a class="btn btn-default" href="modelexcel/updatetemlate.xlsx" role="button">下载模板文件</a></td>
+											<td>
+												<button id="file" class="btn btn-default" data-toggle="modal" data-target="#uploadCheck">上传文件
+												</button>
+											</td>
+										</tr>
+										<tr v-bind:class="{'success':pmcheckanddeleteclass}">
+											<td>在故障表中删除恢复了的故障</td>
+											<td>{{pmcheckanddelete}}</td>
+											<td>
+												<button class="btn btn-default" data-toggle="modal" data-target="#IPmyModal3">直接删除
+												</button>
+											</td>
+										</tr>
+										<tr>
+											<td>下载下发到各公司的故障(全部故障)</td>
+											<td>直接执行，分步下载</td>
+											<td>
+												<button class="btn btn-default" data-toggle="modal" data-target="#choosecompanymodel">打开选择下载公司
+												</button>
+											</td>
+										</tr>
+										<tr>
+											<td>下载下发到各大队的故障(全部故障)</td>
+											<td>直接执行，分步下载</td>
+											<td>
+												<button class="btn btn-default" data-toggle="modal" data-target="#choosedaduimodel">
+													打开选择下载大队
+												</button>
+											</td>
+										</tr>
+
+									</tbody>
+								</table>
+								<button type="button" class="btn btn-primary btn-lg btn-block">全部执行并生成最终文件组</button>
+								</p>
+							</div>
+
+							<div class="tab-pane  active" id="panel-879446">
+								<div class="col-md-12" style="text-align: center; background-color: #9d9d9d">
+									<div class="col-md-12">
+										<h3 align="center"> 选择下方搜索框内容进行查找,双击修改信息</h3>
+									</div>
+									<div class="col-md-1">
+										选择区县<select class="form-control" v-model="county" name="county" v-on:change="search">
+											<option>
+											</option>
+											<option value="张店区">张店区
+											</option>
+											<option value="淄川区">淄川区
+											</option>
+											<option value="博山区">博山区
+											</option>
+											<option value="周村区">周村区
+											</option>
+											<option value="临淄区">临淄区
+											</option>
+											<option value="桓台县">桓台县
+											</option>
+											<option value="沂源县">沂源县
+											</option>
+											<option value="高青县">高青县
+											</option>
+											<option value="高新区">高新区
+											</option>
+											<option value="文昌湖区">文昌湖区
+											</option>
+										</select>
+									</div>
+									<div class="col-md-1">
+										点位名称<input class="form-control" type="text" name="sbip" v-model="dwname" v-on:change="search" placeholder="点位名称" />
+									</div>
+									<div class="col-md-2">
+										海康平台名称<input class="form-control" type="text" name="sbip" v-model="hkname" v-on:change="search" placeholder="海康平台名称" />
+									</div>
+									<div class="col-md-2">
+										IP地址<input class="form-control" type="text" name="sbip" v-model="sbip" v-on:change="search" placeholder="IP地址" />
+									</div>
+									<div class="col-md-1" style="background-color: #777777;padding-bottom: 10px">
+										维保单位<select class="form-control" v-model="wbdw" name="wbdw" v-on:change="search">
+											<option>
+											</option>
+											<option value="三棱">三棱(未出保)</option>
+											<option value="易华录">易华录(未出保)
+											</option>
+											<option value="华迪">华迪(未出保)
+											</option>
+											<option value="广宁">广宁(未出保)
+											</option>
+											<option value="张店大队">张店大队（大队自建）
+											</option>
+											<option value="淄川大队">淄川大队（大队自建）
+											</option>
+											<option value="博山大队">博山大队（大队自建）
+											</option>
+											<option value="周村大队">周村大队（大队自建）
+											</option>
+											<option value="临淄大队">临淄大队（大队自建）
+											</option>
+											<option value="桓台大队">桓台大队（大队自建）
+											</option>
+											<option value="沂源大队">沂源大队（大队自建）
+											</option>
+											<option value="高青大队">高青大队（大队自建）
+											</option>
+											<option value="高新区大队">高新区大队（大队自建）
+											</option>
+											<option value="文昌湖大队">文昌湖大队（大队自建）
+											</option>
+											<option value="已出质保">已出质保（昊泰）
+											</option>
+										</select>
+									</div>
+									<div class="col-md-1" style="background-color: #777777;padding-bottom: 10px">
+										故障分类<select class="form-control" v-model="gzfl" name="gzfl" v-on:change="search">
+											<option>
+											</option>
+											<option value="停运">停运
+											</option>
+											<option value="供电">供电
+											</option>
+											<option value="设备故障">设备故障
+
+											</option>
+											<option value="网络联通">网络联通
+											</option>
+											<option value="网络广电">网络广电
+											</option>
+											<option value="网络移动">网络移动
+											</option>
+											<option value="正在维修">正在维修
+											</option>
+
+										</select>
+									</div>
+									<div class="col-md-1" style="background-color: #777777;padding-bottom: 10px">
+										是否新增<select class="form-control" v-model="sfxz" name="sfxz" v-on:change="search">
+											<option>
+											</option>
+											<option value="新增">新增
+											</option>
+											<option>原有
+											</option>
+										</select>
+									</div>
+									<div class="col-md-1" style="background-color: #777777;padding-bottom: 10px">
+										左侧条件
+										<button class="btn btn-primary" type="button" v-on:click="getpmtablebycompany(wbdw,null,gzfl)">下载筛选
+										</button>
+									</div>
+									<div class="col-md-1">
+										<!--										<button type="button" v-on:click="deletebyids('null')">批量删除</button>-->
+										S列选中项
+										<button class="btn btn-primary" type="button" v-on:click="updateinfoModalByGroup()">
+											批量修改
+										</button>
+									</div>
+									<div class="col-md-1">
+										<!--										<button type="button" v-on:click="deletebyids('null')">批量删除</button>-->
+										自助上报
+										<button class="btn btn-primary" type="button" v-on:click="insertinfoModal()">
+											上报故障
+										</button>
+									</div>
+								</div>
+								<!--								显示区-->
+								<div class="panel-body" style="width : 100% ;height: 720px ; overflow-x: auto ; overflow-y: auto">
+									<table class="table table-hover table-responsive" style="TABLE-LAYOUT: fixed; WORD-BREAK: break-all;">
+										<thead>
+											<tr>
+												<th>S</th>
+												<th>区县</th>
+												<th>点位名称</th>
+												<th>海康平台名称</th>
+												<th>设备
+												</th>
+												<th>IP
+												</th>
+												<th>建设单位
+												</th>
+												<th>质保状态
+												</th>
+												<th>备注
+												</th>
+												<th class="info">维保单位</th>
+												<th class="info">故障分类</th>
+												<th class="info">是否新增</th>
+											</tr>
+
+										</thead>
+
+
+										<tbody>
+											<tr v-for="datec in datecontent" style="font-size: small ; cursor: pointer" v-on:dblclick="updateinfoModal(datec)"
+											 v-on:click="selectChecked(datec.errortableId)">
+
+
+												<td><input id="{{datec.errortableId}}" type="checkbox" v-bind:value="datec.errortableId" v-model="checkedids"
+													 v-bind:checked="checkedall"></td>
+												<td>{{datec.errortableCounty}}</td>
+												<td>{{datec.errortableDianweiname}}</td>
+												<td>{{datec.errortableHaikangpname}}</td>
+												<td>{{datec.errortableDeviceType}}</td>
+												<td>{{datec.errortableDeviceIp}}</td>
+												<td>{{datec.errortableBuildCompany}}</td>
+												<td>{{datec.errortableDeviceExpriation}}</td>
+												<td>{{datec.errortableNote}}</td>
+												<td>{{datec.errortableServercompany}}</td>
+												<td>{{datec.errortableFaultclassification}}</td>
+
+												<td>{{datec.errortableNewcreate}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+
+							<div class="tab-pane" id="panel-8794S">
+
+								<!-- 海康视频巡检 -->
+								<div class="col-md-12" style="margin-top: 2px">
+
+									<div class="col-md-6 col-sm-6">
+										<button type="button" class="btn btn-primary btn-lg btn-block" @click="showuploadHKAllDev()">导入数据</button>
+									</div>
+
+									<div class="col-md-6 col-sm-6">
+										<button type="button" class="btn btn-primary btn-lg btn-block" @click="refreashHkCounty()">刷新数据</button>
+									</div>
+									
+									<div class="col-md-12 col-sm-12">
+										<button type="button" class="btn btn-primary btn-lg btn-block" @click="getSingleCountyRecord('err')">异常问题巡检</button>
+									</div>
+								</div>
+
+								<table class="table table-hover text-center">
+									<thead>
+										<tr>
+											<th class="col-md-4 col-sm-6 text-center ">组织名称</th>
+											<th class="col-md-4 col-sm-3 text-center">巡检进度(正常/故障/未巡检)</th>
+											<th class="col-md-4 col-sm-3 text-center">完成率</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="item in hkxjcountys" v-on:dblclick="getSingleCountyRecord(item.orgname)">
+											<td class="col-md-4 col-sm-6">{{item.orgname}}</td>
+											<td class="col-md-4 col-sm-3">{{item.donenum}}/{{item.allnum}}（{{item.nornum}}/{{item.errnum}}/{{item.allnum-item.nornum-item.errnum}}）</td>
+											<td class="col-md-4 col-sm-3">{{item.rate}}</td>
+										</tr>
+
+									</tbody>
+								</table>
+
+							</div>
+
+							<div class="tab-pane" id="panel-87977S">
+
+								<!-- 海康大队反馈 -->
+								
+								
+								
+
+							</div>
+						</div>
+						<!-- 切换选项卡结束 -->
+					</div>
+				</div>
+			</div>
+
+
+			<!-- 上传每日新增的模态框 -->
+			<div class="modal fade" id="uploadCheck" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<!-- 上传文件的表单 -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+							</button>
+							<h4 class="modal-title" id="myModalLabel">
+								请选择上传的文件
+							</h4>
+						</div>
+						<div class="modal-body" style="text-align: center;">
+							请注意：必须按照格式填写，最后四列必须按照格式内填写
+							<br>
+							<hr>
+							<h2>{{uploadstate}}</h2>
+							<hr>
+							<br>
+							<input id="fileunewpload" type="file" name="file" class="center-block btn-primary btn-lg"></input>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+							<button type="button" class="btn btn-primary" v-on:click="upnewfile">
+								上传文件
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+			<!-- 上传海康所有设备的模态框 -->
+			<div class="modal fade" id="uploadHKAllDev" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<!-- 上传文件的表单 -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+							</button>
+							<h4 class="modal-title" id="myModalLabelHKAllDev">
+								请选择上传的文件
+							</h4>
+						</div>
+						<div class="modal-body" style="text-align: center;">
+							请注意：请导入直接从海康导出的所有点位数据
+							<br>
+							<hr>
+							<h2>{{uploadstate}}</h2>
+							<hr>
+							<br>
+							<input id="fileunewploadHKAllDev" type="file" name="fileHKAllDev" class="center-block btn-primary btn-lg"></input>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+							<button type="button" class="btn btn-primary" v-on:click="upnewfileHKAllDev">
+								上传文件
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+			<!-- 加载中模态框 -->
+			<div class="modal fade" id="loadinginfo" tabindex="-1" role="dialog" aria-labelledby="loadingTitle" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+
+							<h4 class="modal-title" id="loadingTitle">
+								加载执行中
+							</h4>
+						</div>
+						<div class="modal-body">
+							Loading.....加载中
+						</div>
+
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal -->
+			</div>
+
+
+			<!-- 选择公司下载对应报表（Modal） -->
+			<div class="modal fade" id="choosecompanymodel" tabindex="-1" role="dialog" aria-labelledby="choosecompanymodeltitle"
+			 aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<!-- 上传文件的表单 -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							</button>
+							<h4 class="modal-title" id="choosecompanymodeltitle">
+								请选择公司名称按钮下载
+							</h4>
+						</div>
+						<div class="modal-body" style="text-align: center;">
+
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("三棱","未出保",null)>三棱
+								</button>
+							</div>
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button id="company2" type="button" class="btn btn-primary btn-lg btn-block" v-on:click=getpmtablebycompany("华迪","未出保",null)>华迪
+								</button>
+							</div>
+
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button id="company3" type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("广宁","未出保",null)>广宁
+								</button>
+							</div>
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button id="company4" type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("易华录","未出保",null)>易华录
+								</button>
+							</div>
+
+							<div class="col-md-12" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("已出质保",null,null)>已出保
+								</button>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+								</button>
+							</div>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+
+			<!-- 选择大队下载对应报表（Modal） -->
+			<div class="modal fade" id="choosedaduimodel" tabindex="-1" role="dialog" aria-labelledby="choosedaduimodeltitle"
+			 aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<!-- 上传文件的表单 -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+							</button>
+							<h4 class="modal-title" id="choosedaduimodeltitle">
+								请选择大队名称按钮下载
+							</h4>
+						</div>
+						<div class="modal-body" style="text-align: center;">
+
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("张店大队",null,null)>张店大队
+								</button>
+							</div>
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary btn-lg btn-block" v-on:click=getpmtablebycompany("淄川大队",null,null)>淄川大队
+								</button>
+							</div>
+
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("博山大队",null,null)>博山大队
+								</button>
+							</div>
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("周村大队",null,null)>周村大队
+								</button>
+							</div>
+
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("临淄大队",null,null)>临淄大队
+								</button>
+							</div>
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("桓台大队",null,null)>桓台大队
+								</button>
+							</div>
+
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("沂源大队",null,null)>沂源大队
+								</button>
+							</div>
+
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("高青大队",null,null)>高青大队
+								</button>
+							</div>
+
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("高新区大队",null,null)>高新区大队
+								</button>
+							</div>
+
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("文昌湖大队",null,null)>文昌湖大队
+								</button>
+							</div>
+
+							<div class="col-md-12" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycounty("张店区")>张店大队全部
+								</button>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+								</button>
+							</div>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+
+			<!-- 选择以故障原因分类下载对应报表（Modal） -->
+			<div class="modal fade" id="chooseerrorreasonmodel" tabindex="-1" role="dialog" aria-labelledby="chooseerrorreasomodeltitle"
+			 aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<!-- 上传文件的表单 -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+							</button>
+							<h4 class="modal-title" id="chooseerrorreasomodeltitle">
+								请选择故障分类名称按钮下载
+							</h4>
+						</div>
+						<div class="modal-body" style="text-align: center;">
+
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebyerrortype("停运")>停运
+								</button>
+							</div>
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebyerrortype("供电")>供电
+								</button>
+							</div>
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebyerrortype("网络")>网络
+								</button>
+							</div>
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebyerrortype("设备故障")>设备故障
+								</button>
+							</div>
+
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebyifinpro("未出质保")>质保期内故障
+								</button>
+							</div>
+
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebyifinpro("已出质保")>质保期外故障
+								</button>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+								</button>
+							</div>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+
+			<!-- 上传源文件表用到的模态框 -->
+			<div class="modal fade" id="upfilebasev" tabindex="-1" role="dialog" aria-labelledby="myModalLabeupbase" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<!-- 上传文件的表单 -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+							</button>
+							<h4 class="modal-title" id="myModalLabeupbase">
+								请选择上传的文件
+							</h4>
+						</div>
+						<div class="modal-body" style="text-align: center;">
+							请注意：必须按照格式填写，最后四列必须按照格式内填写
+							<br>
+							<hr>
+							<h2>{{uploadstate}}</h2>
+							<hr>
+							<br>
+							<input id="filebasepload" type="file" name="basefile" class="center-block btn-primary btn-lg"></input>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+							<button type="button" class="btn btn-primary" v-on:click="upnewfilebase">
+								上传文件
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+			<!-- 修改信息模态框（Modal） -->
+			<div class="modal fade" id="updateinfoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabelss"
+			 aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								&times;
+							</button>
+							<h4 class="modal-title" id="myModalLabelss">
+								基本信息修改
+							</h4>
+						</div>
+						<div class="modal-body">
+
+							<table class="table">
+								<thead>
+									<tr>
+										<th>属性</th>
+										<th>信息</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>对应的ID号(不可修改):</td>
+										<td>{{errinfo.errortableId}}</td>
+									</tr>
+									<tr>
+										<td>区县:</td>
+										<td><select v-model="errinfo.errortableCounty" v-bind:value="errinfo.errortableCounty">
+												<option>
+												</option>
+												<option value="张店区">张店区
+												</option>
+												<option value="淄川区">淄川区
+												</option>
+												<option value="博山区">博山区
+												</option>
+												<option value="周村区">周村区
+												</option>
+												<option value="临淄区">临淄区
+												</option>
+												<option value="桓台县">桓台县
+												</option>
+												<option value="沂源县">沂源县
+												</option>
+												<option value="高青县">高青县
+												</option>
+												<option value="高新区">高新区
+												</option>
+												<option value="文昌湖区">文昌湖区
+												</option>
+											</select></td>
+									</tr>
+									<tr>
+										<td>点位名称:</td>
+										<td>{{errinfo.errortableDianweiname}}</td>
+									</tr>
+									<tr>
+										<td>海康平台名称:</td>
+										<td>{{errinfo.errortableHaikangpname}}</td>
+									</tr>
+									<tr>
+										<td>海信平台名称:</td>
+										<td>{{errinfo.errortableHaixinpname}}</td>
+									</tr>
+									<tr>
+										<td>设备类型:</td>
+										<td>{{errinfo.errortableDeviceType}}</td>
+									</tr>
+									<tr>
+										<td>设备IP:</td>
+										<td>{{errinfo.errortableDeviceIp}}</td>
+									</tr>
+									<tr>
+										<td>建设单位:</td>
+										<td>{{errinfo.errortableBuildCompany}}</td>
+									</tr>
+									<tr>
+										<td>质保情况:</td>
+										<td>
+											<select v-model="errinfo.errortableDeviceExpriation" v-bind:value="errinfo.errortableDeviceExpriation">
+												<option>
+												</option>
+												<option value="未出保">未出保
+												</option>
+												<option value="出保">出保
+												</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td>维修情况:</td>
+										<td><input type="text" name="sbip" v-model="errinfo.errortableRepairStatus" v-bind:value="errinfo.errortableRepairStatus" /></td>
+									</tr>
+									<tr>
+										<td>请求时间:</td>
+										<td>{{errortableRequestTimeShow}}</td>
+									</tr>
+									<tr>
+										<td>备注:</td>
+										<td><input type="text" name="sbip" v-model="errinfo.errortableNote" v-bind:value="errinfo.errortableNote" /></td>
+									</tr>
+									<tr>
+										<td>服务公司:</td>
+										<td><select v-model="errinfo.errortableServercompany" v-bind:value="errinfo.errortableServercompany">
+												<option value="三棱">三棱</option>
+												<option value="易华录">易华录
+												</option>
+												<option value="华迪">华迪
+												</option>
+												<option value="广宁">广宁
+												</option>
+												<option value="张店大队">张店大队
+												</option>
+												<option value="淄川大队">淄川大队
+												</option>
+												<option value="博山大队">博山大队
+												</option>
+												<option value="周村大队">周村大队
+												</option>
+												<option value="临淄大队">临淄大队
+												</option>
+												<option value="桓台大队">桓台大队
+												</option>
+												<option value="沂源大队">沂源大队
+												</option>
+												<option value="高青大队">高青大队
+												</option>
+												<option value="高新区大队">高新区大队
+												</option>
+												<option value="文昌湖大队">文昌湖大队
+												</option>
+												<option value="已出质保">已出质保
+												</option>
+											</select></td>
+									</tr>
+									<tr>
+										<td>故障分类:</td>
+										<td><select v-model="errinfo.errortableFaultclassification" v-bind:value="errinfo.errortableFaultclassification">
+												<option value="停运">停运
+												</option>
+												<option value="供电">供电
+												</option>
+												<option value="设备故障">设备故障
+
+												</option>
+												<option value="网络联通">网络联通
+												</option>
+												<option value="网络广电">网络广电
+												</option>
+												<option value="网络移动">网络移动
+												</option>
+												<option value="正在维修">正在维修
+												</option>
+											</select></td>
+									</tr>
+									<tr>
+										<td>是否新增:</td>
+										<td><select v-model="errinfo.errortableNewcreate" v-bind:value="errinfo.errortableNewcreate">
+												<option value="新增">新增
+												</option>
+												<option>原有
+												</option>
+											</select></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" v-on:click="deletebyids(errinfo.errortableId)">
+								删除该记录
+							</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+							<button type="button" class="btn btn-primary" v-on:click="updatebyid">
+								提交更改
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal -->
+			</div>
+
+			<div class="modal fade" id="insertinfoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabelss"
+			 aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								&times;
+							</button>
+							<h4 class="modal-title" id="insertinfoModalh">
+								基本信息新增
+							</h4>
+						</div>
+						<div class="modal-body">
+
+							<table class="table">
+								<thead>
+									<tr>
+										<th>属性</th>
+										<th>信息</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>*区县:（*必填）</td>
+										<td><select v-model="errinfo.errortableCounty" id="qx">
+												<option value="张店区" selected>张店区
+												</option>
+												<option value="淄川区">淄川区
+												</option>
+												<option value="博山区">博山区
+												</option>
+												<option value="周村区">周村区
+												</option>
+												<option value="临淄区">临淄区
+												</option>
+												<option value="桓台县">桓台县
+												</option>
+												<option value="沂源县">沂源县
+												</option>
+												<option value="高青县">高青县
+												</option>
+												<option value="高新区">高新区
+												</option>
+												<option value="文昌湖区">文昌湖区
+												</option>
+											</select></td>
+									</tr>
+									<tr>
+										<td>*点位名称:</td>
+										<td><input type="text" v-model="errinfo.errortableDianweiname"> </td>
+									</tr>
+									<tr>
+										<td>*海康平台名称(下同):</td>
+										<td><input type="text" v-model="errinfo.errortableHaikangpname"> </td>
+									</tr>
+									<tr>
+										<td>*海信平台名称:</td>
+										<td><input type="text" v-model="errinfo.errortableHaixinpname"></td>
+									</tr>
+									<tr>
+										<td>*设备类型:</td>
+										<td>
+											<select v-model="errinfo.errortableDeviceType">
+												<option value="电警相机">电警相机
+												</option>
+												<option value="卡口相机">卡口相机
+												</option>
+												<option value="反向卡口相机">反向卡口相机
+												</option>
+												<option value="全景相机">全景相机
+												</option>
+												<option value="违停球机">违停球机
+												</option>
+												<option value="微电警">微电警
+												</option>
+
+
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td>*设备IP:(无IP填写：169.0.0.0)</td>
+										<td><input type="text" v-model="errinfo.errortableDeviceIp" placeholder="169.0.0.0"></td>
+									</tr>
+									<tr>
+										<td>*建设单位:</td>
+										<td><input type="text" v-model="errinfo.errortableBuildCompany"></td>
+									</tr>
+									<tr>
+										<td>*质保情况:</td>
+										<td>
+											<select v-model="errinfo.errortableDeviceExpriation">
+												<option value="未出保">未出保
+												</option>
+												<option value="出保">出保
+												</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td>故障情况:</td>
+										<td><input type="text" name="sbip" v-model="errinfo.errortableRepairStatus" />
+										</td>
+									</tr>
+									<tr>
+										<td>备注:</td>
+										<td><input type="text" name="sbip" v-model="errinfo.errortableNote" /></td>
+									</tr>
+									<tr>
+										<td>*服务公司:</td>
+										<td><select v-model="errinfo.errortableServercompany">
+												<option value="三棱">三棱（未出保）</option>
+												<option value="易华录">易华录（未出保）
+												</option>
+												<option value="华迪">华迪（未出保）
+												</option>
+												<option value="广宁">广宁（未出保）
+												</option>
+												<option value="张店大队">张店大队（自建）
+												</option>
+												<option value="淄川大队">淄川大队（自建）
+												</option>
+												<option value="博山大队">博山大队（自建）
+												</option>
+												<option value="周村大队">周村大队（自建）
+												</option>
+												<option value="临淄大队">临淄大队（自建）
+												</option>
+												<option value="桓台大队">桓台大队（自建）
+												</option>
+												<option value="沂源大队">沂源大队（自建）
+												</option>
+												<option value="高青大队">高青大队（自建）
+												</option>
+												<option value="高新区大队">高新区大队（自建）
+												</option>
+												<option value="文昌湖大队">文昌湖大队（自建）
+												</option>
+												<option value="已出质保">已出质保（昊泰）
+												</option>
+											</select></td>
+									</tr>
+									<tr>
+										<td>*故障分类:</td>
+										<td><select v-model="errinfo.errortableFaultclassification">
+												<option value="正在维修">正在维修
+												</option>
+											</select></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="modal-footer">
+							<!--                    <button type="button" class="btn btn-danger" v-on:click="deletebyids(errinfo.errortableId)">-->
+							<!--                        删除该记录-->
+							<!--                    </button>-->
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+							<button type="button" class="btn btn-primary" v-on:click="insertNewRec">
+								提交更改
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal -->
+			</div>
+
+
+			<!-- 模态框（Modal） -->
+			<div class="modal fade" id="IPmyModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+							</button>
+							<h4 class="modal-title" id="myModalLabel6">
+								录入已恢复的ip信息，以标准的JSON格式
+							</h4>
+						</div>
+						<div class="modal-body">
 							<textarea id="jsonips" rows="20" cols="50">
 
 							</textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                    </button>
-                    <button type="button" class="btn btn-primary" v-on:click="checkanddelete()">
-                        提交更改
-                    </button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <!-- 选择公司下载对应报表（Modal） -->
-    <div class="modal fade" id="printModel" tabindex="-1" role="dialog" aria-labelledby="printModelmodeltitle"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- 上传文件的表单 -->
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    </button>
-                    <h4 class="modal-title" id="printModelmodeltitle">
-                        请选择公司名称按钮下载
-                    </h4>
-                </div>
-                <div class="modal-body" style="text-align: center;">
-
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("三棱",null,"正在维修")>三棱
-                        </button>
-                    </div>
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("华迪",null,"正在维修")>华迪
-                        </button>
-                    </div>
-
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("广宁",null,"正在维修")>广宁
-                        </button>
-                    </div>
-                    <div class="col-md-6" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("易华录",null,"正在维修")>易华录
-                        </button>
-                    </div>
-
-                    <div class="col-md-12" style="height: 50px; line-height: 50px">
-                        <button type="button" class="btn btn-primary  btn-lg btn-block"
-                                v-on:click=getpmtablebycompany("已出质保",null,"正在维修")>已出保
-                        </button>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭所有
-                        </button>
-                    </div>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <!-- 批量修改信息模态框（Modal） -->
-    <div class="modal fade" id="updateinfoModalByGroup" tabindex="-1" role="dialog" aria-labelledby="myModalLabelss"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        &times;
-                    </button>
-                    <h4 class="modal-title" id="myModalLabelss2">
-                        批量信息修改
-                    </h4>
-                </div>
-                <div class="modal-body" style="align-content: center">
-                    <br>
-                    <div class="col-md-12">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>属性</th>
-                                <th>修改值</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>质保情况：</td>
-                                <td><select v-model="errinfo.errortableDeviceExpriation"
-                                            v-bind:value="errinfo.errortableDeviceExpriation">
-                                    <option value="出保">出保
-                                    </option>
-                                    <option value="未出保">未出保
-                                    </option>
-                                </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>服务公司:</td>
-                                <td><select v-model="errinfo.errortableServercompany"
-                                            v-bind:value="errinfo.errortableServercompany">
-                                    <option value="三棱">三棱</option>
-                                    <option value="易华录">易华录
-                                    </option>
-                                    <option value="华迪">华迪
-                                    </option>
-                                    <option value="广宁">广宁
-                                    </option>
-                                    <option value="张店大队">张店大队
-                                    </option>
-                                    <option value="淄川大队">淄川大队
-                                    </option>
-                                    <option value="博山大队">博山大队
-                                    </option>
-                                    <option value="周村大队">周村大队
-                                    </option>
-                                    <option value="临淄大队">临淄大队
-                                    </option>
-                                    <option value="桓台大队">桓台大队
-                                    </option>
-                                    <option value="沂源大队">沂源大队
-                                    </option>
-                                    <option value="高青大队">高青大队
-                                    </option>
-                                    <option value="高新区大队">高新区大队
-                                    </option>
-                                    <option value="文昌湖大队">文昌湖大队
-                                    </option>
-                                    <option value="已出质保">已出质保</option>
-                                </select></td>
-                            </tr>
-                            <tr>
-                                <td>故障分类:</td>
-                                <td><select v-model="errinfo.errortableFaultclassification"
-                                            v-bind:value="errinfo.errortableFaultclassification">
-                                    <option value="停运">停运
-                                    </option>
-                                    <option value="供电">供电
-                                    </option>
-                                    <option value="设备故障">设备故障
-                                    </option>
-                                    <option value="网络联通">网络联通
-                                    </option>
-                                    <option value="网络广电">网络广电
-                                    </option>
-                                    <option value="网络移动">网络移动
-                                    </option>
-                                    <option value="正在维修">正在维修
-                                    </option>
-                                </select></td>
-                            </tr>
-
-                            <tr>
-                                <td>维修情况:</td>
-                                <td><input type="text" name="sbip" v-model="errinfo.errortableRepairStatus"
-                                           v-bind:value="errinfo.errortableRepairStatus"/></td>
-                            </tr>
-                            <tr>
-                                <td>备注:</td>
-                                <td><input type="text" name="sbip" v-model="errinfo.errortableNote"
-                                           v-bind:value="errinfo.errortableNote"/></td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                        </button>
-                        <button type="button" class="btn btn-primary" v-on:click="updateinfoModalByGroupConfirm()">
-                            提交更改
-                        </button>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal -->
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+							<button type="button" class="btn btn-primary" v-on:click="checkanddelete()">
+								提交更改
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
 
 
-        </div>
-        <!-- VUE -->
-        <script src="js/vue.min.js"></script>
-        <script src="js/myvue.js"></script>
-        <script src="js/axios.min.js"></script>
+			<!-- 模态框（Modal）海康巡检区县内模块框 -->
+			<div class="modal fade" id="IPmyModalhkxj" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+							</button>
+							<h4 class="modal-title" id="myModalLabelhkxj">
+								单个点位数据
+							</h4>
+						</div>
+						<div class="modal-body">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>属性</th>
+										<th>信息:{{errpointnote}}</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>监控点编号</td>
+										<td>{{hkdevinfo.pointid}}</td>
+									</tr>
+									<tr>
+										<td>监控点名称</td>
+										<td><input type="text" id="jkdname" style="border: white ; width: 100%;" value="点击下一步开始任务"></td>
+									</tr>
+									<tr>
+										<td>主原因</td>
+										<td>
+											<!-- 表示一个成功的或积极的动作 -->
+											<button type="button" class="btn btn-success" v-on:click="doex('normal')">正常</button>
+											<!-- 标准的按钮 -->
+											<button type="button" class="btn btn-default" v-on:click="doex('mark')">标注错误</button>
+											<!-- 提供额外的视觉效果，标识一组按钮中的原始动作 -->
+											<button type="button" class="btn btn-primary" v-on:click="doex('record')">录像问题</button>
+											<!-- 信息警告消息的上下文按钮 -->
+											<button type="button" class="btn btn-info" v-on:click="doex('cover')">异物遮挡</button>
+											<!-- 表示应谨慎采取的动作 -->
+											<button type="button" class="btn btn-warning" v-on:click="doex('delay')">卡顿</button>
+											<!-- 表示一个危险的或潜在的负面动作 -->
+											<button type="button" class="btn btn-danger" v-on:click="doex('offline')">不在线</button>
+										</td>
+									</tr>
+									<tr>
+										<td class="col-xs-2 col-sm-2">详细原因</td>
+										<td class="col-xs-10 col-sm-10">
+											<label class="radio-inline col-xs-3" v-for="errlist in hkxjerrclass" >
+													<input type="radio" name="optionsRadiosinline" v-bind:value="errlist" v-model="hkdevinfo.pointerrsubreason"> {{errlist}}
+											</label>
+										</td>
+									</tr>
+									<tr>
+										<td>备注</td>
+										<td>
+											<textarea class="col-md-12 col-sm-12" placeholder="填入详细原因" v-model="hkdevinfo.pointnote">
+
+											</textarea>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+
+							<button type="button" class="btn btn-default" v-on:click="getNextSingleCountyRecord()">下一个
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+
+			<!-- 选择公司下载对应报表（Modal） -->
+			<div class="modal fade" id="printModel" tabindex="-1" role="dialog" aria-labelledby="printModelmodeltitle"
+			 aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<!-- 上传文件的表单 -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							</button>
+							<h4 class="modal-title" id="printModelmodeltitle">
+								请选择公司名称按钮下载
+							</h4>
+						</div>
+						<div class="modal-body" style="text-align: center;">
+
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("三棱",null,"正在维修")>三棱
+								</button>
+							</div>
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary btn-lg btn-block" v-on:click=getpmtablebycompany("华迪",null,"正在维修")>华迪
+								</button>
+							</div>
+
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("广宁",null,"正在维修")>广宁
+								</button>
+							</div>
+							<div class="col-md-6" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("易华录",null,"正在维修")>易华录
+								</button>
+							</div>
+
+							<div class="col-md-12" style="height: 50px; line-height: 50px">
+								<button type="button" class="btn btn-primary  btn-lg btn-block" v-on:click=getpmtablebycompany("已出质保",null,"正在维修")>已出保
+								</button>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">关闭所有
+								</button>
+							</div>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+			<!-- 批量修改信息模态框（Modal） -->
+			<div class="modal fade" id="updateinfoModalByGroup" tabindex="-1" role="dialog" aria-labelledby="myModalLabelss"
+			 aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								&times;
+							</button>
+							<h4 class="modal-title" id="myModalLabelss2">
+								批量信息修改
+							</h4>
+						</div>
+						<div class="modal-body" style="align-content: center">
+							<br>
+							<div class="col-md-12">
+								<table class="table">
+									<thead>
+										<tr>
+											<th>属性</th>
+											<th>修改值</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>质保情况：</td>
+											<td><select v-model="errinfo.errortableDeviceExpriation" v-bind:value="errinfo.errortableDeviceExpriation">
+													<option value="出保">出保
+													</option>
+													<option value="未出保">未出保
+													</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td>服务公司:</td>
+											<td><select v-model="errinfo.errortableServercompany" v-bind:value="errinfo.errortableServercompany">
+													<option value="三棱">三棱</option>
+													<option value="易华录">易华录
+													</option>
+													<option value="华迪">华迪
+													</option>
+													<option value="广宁">广宁
+													</option>
+													<option value="张店大队">张店大队
+													</option>
+													<option value="淄川大队">淄川大队
+													</option>
+													<option value="博山大队">博山大队
+													</option>
+													<option value="周村大队">周村大队
+													</option>
+													<option value="临淄大队">临淄大队
+													</option>
+													<option value="桓台大队">桓台大队
+													</option>
+													<option value="沂源大队">沂源大队
+													</option>
+													<option value="高青大队">高青大队
+													</option>
+													<option value="高新区大队">高新区大队
+													</option>
+													<option value="文昌湖大队">文昌湖大队
+													</option>
+													<option value="已出质保">已出质保</option>
+												</select></td>
+										</tr>
+										<tr>
+											<td>故障分类:</td>
+											<td><select v-model="errinfo.errortableFaultclassification" v-bind:value="errinfo.errortableFaultclassification">
+													<option value="停运">停运
+													</option>
+													<option value="供电">供电
+													</option>
+													<option value="设备故障">设备故障
+													</option>
+													<option value="网络联通">网络联通
+													</option>
+													<option value="网络广电">网络广电
+													</option>
+													<option value="网络移动">网络移动
+													</option>
+													<option value="正在维修">正在维修
+													</option>
+												</select></td>
+										</tr>
+
+										<tr>
+											<td>维修情况:</td>
+											<td><input type="text" name="sbip" v-model="errinfo.errortableRepairStatus" v-bind:value="errinfo.errortableRepairStatus" /></td>
+										</tr>
+										<tr>
+											<td>备注:</td>
+											<td><input type="text" name="sbip" v-model="errinfo.errortableNote" v-bind:value="errinfo.errortableNote" /></td>
+										</tr>
+									</tbody>
+								</table>
+
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+								</button>
+								<button type="button" class="btn btn-primary" v-on:click="updateinfoModalByGroupConfirm()">
+									提交更改
+								</button>
+							</div>
+						</div><!-- /.modal-content -->
+					</div><!-- /.modal -->
+
+
+				</div>
+				<!-- VUE -->
+				<script src="js/vue.min.js"></script>
+				<script src="js/myvue.js"></script>
+				<script src="js/axios.min.js"></script>
 </html>
