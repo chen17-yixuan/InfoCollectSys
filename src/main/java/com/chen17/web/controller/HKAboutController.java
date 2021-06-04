@@ -115,9 +115,11 @@ public class HKAboutController {
                 hic.setIncidentNote(pointnote);
                 hic.setIncidentFindtime(new Date());
                 hic.setIncidentRepairStatus("0");
+                hic.setIncidentWarrintyCompany(pointorg);
                 if(hic.getIncidentNote().equals("null")){
                     hic.setIncidentNote("");
                 }
+                hic.setIncidentReason("正在维修（未反馈）");
                 his.insert(hic);
             }
         }
@@ -151,12 +153,43 @@ public class HKAboutController {
                 hkIncident.setIncidentProblem(pointerrmainreason);
                 hkIncident.setIncidentSubproblem(pointerrsubreason);
                 hkIncident.setIncidentNote(pointnote);
+
                 his.updateBySN(hkIncident);
             }
         }
         HkIncident hkIncident = his.selectByErrLimitOne();
         return  JacksonUtil.toJSon(hkIncident);
     }
+
+    @RequestMapping("/searchByFileds")
+    public String searchByFileds(HttpServletRequest request){
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+        String problem = multipartRequest.getParameter("problem");
+        String repairStatus = multipartRequest.getParameter("repairStatus");
+        String company = multipartRequest.getParameter("company");
+        String reason = multipartRequest.getParameter("reason");
+
+        if(problem.equals("undefined")){problem = null;}
+        if(repairStatus.equals("undefined")){repairStatus = null;}
+        if(company.equals("undefined")){company = null;}
+        if(reason.equals("undefined")){reason = null;}
+
+        System.out.println(problem+"-----------"+repairStatus);
+
+        List<HkIncident> hkIncidents = his.searchHkIncidentBySomeFiled(problem, repairStatus, company, reason);
+        List<HkIncident> hkIncidentM = new ArrayList<>();
+        for (HkIncident hkIncident : hkIncidents){
+            if(hkIncident.getIncidentRepairStatus().equals("0")){
+                hkIncident.setIncidentRepairStatus("未修复");
+            }else {
+                hkIncident.setIncidentRepairStatus("已修复待确认");
+            }
+            hkIncidentM.add(hkIncident);
+        }
+
+        return JacksonUtil.toJSon(hkIncidentM);
+    }
+
 
     @RequestMapping(
             value = {"uploadHKallDev"},

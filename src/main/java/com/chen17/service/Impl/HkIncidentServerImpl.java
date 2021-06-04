@@ -53,4 +53,9 @@ public class HkIncidentServerImpl implements HkIncidentServer {
     public int updateBySN(HkIncident record) {
         return hkic.updateBySN(record);
     }
+
+    @Override
+    public List<HkIncident> searchHkIncidentBySomeFiled(String problem, String repairStatus, String company, String reason) {
+        return hkic.searchHkIncidentBySomeFiled(problem,repairStatus,company,reason);
+    }
 }

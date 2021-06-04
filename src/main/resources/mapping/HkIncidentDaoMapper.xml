@@ -34,11 +34,34 @@
 
     select
     <include refid="Base_Column_List" />
-    from hk_incident  WHERE Incident_Repair_Status = '0'  AND Incident_FindTime <![CDATA[ < ]]> DATE(NOW())  LIMIT 1
+    from hk_incident  WHERE  Incident_FindTime <![CDATA[ < ]]> DATE(NOW())  LIMIT 1
 
   </select>
+  <select id="searchHkIncidentBySomeFiled" resultMap="BaseResultMap" parameterType="java.lang.String">
 
-    <delete id="deleteBySN" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List"/>
+    from hk_incident where 1 = 1
+    <if test="problem!=null and problem!='' and problem!='null'">
+      and  Incident_Problem = #{problem,jdbcType=VARCHAR}
+    </if>
+
+    <if test="repairStatus!=null and repairStatus!='' and repairStatus!='null'">
+      and  Incident_Repair_Status = #{repairStatus,jdbcType=VARCHAR}
+    </if>
+
+    <if test="company!=null and company!='' and company!='null'">
+      and  Incident_Warrinty_Company = #{company,jdbcType=VARCHAR}
+    </if>
+
+    <if test="reason!=null and reason!='' and reason!='null'">
+      and  Incident_Reason = #{reason,jdbcType=VARCHAR}
+    </if>
+
+    order by Incident_DevName asc
+  </select>
+
+  <delete id="deleteBySN" parameterType="java.lang.String">
       delete from hk_incident
       where DEVICE_SN = #{deviceSn,jdbcType=VARCHAR}
     </delete>

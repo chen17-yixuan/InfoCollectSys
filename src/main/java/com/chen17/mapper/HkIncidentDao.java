@@ -32,4 +32,6 @@ public interface HkIncidentDao {
     List<String> getAllIncidentSn();
 
     HkIncident selectByErrLimitOne();
+
+    List<HkIncident> searchHkIncidentBySomeFiled(String problem, String repairStatus,String company,String reason);
 }

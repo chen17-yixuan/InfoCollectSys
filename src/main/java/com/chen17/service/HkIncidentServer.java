@@ -21,4 +21,6 @@ public interface HkIncidentServer {
     int deleteBySN(String deviceSn);
 
     int updateBySN(HkIncident record);
+
+    List<HkIncident> searchHkIncidentBySomeFiled(String problem, String repairStatus,String company,String reason);
 }

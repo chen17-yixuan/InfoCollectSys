@@ -13,6 +13,7 @@ var vm = new Vue({
 		hkxjcountys: null,
 		hkxjsearchcounty: null,
 		hkxjerrclass: null,
+		searchHKinfos : null,
 		errpointnote: null,
 		county: null,
 		dwname: null,
@@ -27,6 +28,10 @@ var vm = new Vue({
 		checkedids: [],
 		errortableRequestTimeShow: null,
 		errortableRequestTimeCache: null,
+		
+		hkerrshow:["正常","标注错误","录像问题","异物遮挡","卡顿","不在线"],
+		hkerrreason:["停运","供电","设备硬件问题","设备问题无法修复","网络(广电)","网络(联通)","网络(移动)","正在维修（未反馈）"],
+		
 		errinfo: {
 			errortableId: null,
 			errortableCounty: null,
@@ -47,11 +52,18 @@ var vm = new Vue({
 			errortableNewcreate: null,
 		},
 		hkdevinfo: {
-			pointid: null,
-			pointname: "点击下一步开始任务",
+			problem: null,
+			repairStatus: "点击下一步开始任务",
 			pointerrmainreason: null,
 			pointerrsubreason: null,
 			pointnote: null
+		},
+		
+		searchHKinfo: {
+			pointid: null,
+			pointname: null,
+			company: null,
+			reason: null,
 		},
 
 		hkdeverrclassifier: {
@@ -415,7 +427,6 @@ var vm = new Vue({
 		// 根据条件查找到全局搜索
 		search: function() {
 
-
 			let formData = new FormData();
 			//file对应传过去的参数
 			formData.append('county', this.county);
@@ -426,7 +437,6 @@ var vm = new Vue({
 			formData.append('gzfl', this.gzfl);
 			formData.append('fxpt', this.fxpt);
 			formData.append('sfxz', this.sfxz);
-
 			axios({
 					method: 'post',
 					url: "/daywork/allsearch",
@@ -443,6 +453,40 @@ var vm = new Vue({
 				.catch(err => {
 					console.log("失败");
 				});
+		},
+		
+		searchHk: function() {
+		
+			let formData = new FormData();
+			//file对应传过去的参数
+			formData.append('problem', this.searchHKinfo.problem);
+			formData.append('repairStatus',this.searchHKinfo.repairStatus);
+			formData.append('company', this.searchHKinfo.company);
+			formData.append('reason', this.searchHKinfo.reason);
+		
+			axios({
+					method: 'post',
+					url: "/hkabout/searchByFileds",
+					data: formData,
+					headers: {
+						//文件头必须写，这是网址头
+						'Content-Type': 'application/x-www-form-urlencoded'
+					}
+				})
+				.then(res => {
+					console.log(res.data);
+					this.searchHKinfos = res.data;
+					
+					console.log(this.searchHKinfos);
+				})
+				.catch(err => {
+					console.log("失败");
+				});
+		},
+		
+		queryAimRecord: function(devsn) {
+		
+			alert(devsn);
 		},
 
 		//下面继续写方法
@@ -518,6 +562,11 @@ var vm = new Vue({
 		},
 
 		getSingleCountyRecord: function(orgname) {
+			this.hkdevinfo.pointid = null;
+			this.hkdevinfo.pointname = null;
+			this.hkdevinfo.pointerrmainreason = null;
+			this.hkdevinfo.pointerrsubreason = null;
+			this.hkdevinfo.pointnote = null;
 			this.errpointnote = "";
 			this.hkxjsearchcounty = orgname;
 			$('#IPmyModalhkxj').modal('show');
@@ -537,6 +586,7 @@ var vm = new Vue({
 		},
 
 		getNextSingleCountyRecord: function() {
+			
 			this.errpointnote = "";
 			if (this.mode != "err") {
 				if (this.hkdevinfo.pointerrsubreason == null || this.hkdevinfo.pointerrmainreason == null) {

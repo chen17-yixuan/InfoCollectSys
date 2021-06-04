@@ -359,9 +359,9 @@
 									<div class="col-md-6 col-sm-6">
 										<button type="button" class="btn btn-primary btn-lg btn-block" @click="refreashHkCounty()">刷新数据</button>
 									</div>
-									
+
 									<div class="col-md-12 col-sm-12">
-										<button type="button" class="btn btn-primary btn-lg btn-block" @click="getSingleCountyRecord('err')">异常问题巡检</button>
+										<button type="button" class="btn btn-primary btn-lg btn-block" @click="getSingleCountyRecord('err')">异常问题巡检（当日）</button>
 									</div>
 								</div>
 
@@ -388,9 +388,93 @@
 							<div class="tab-pane" id="panel-87977S">
 
 								<!-- 海康大队反馈 -->
-								
-								
-								
+
+
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th>监控点名称&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-success">下载右侧选择=></button></th>
+											<th>
+												<select class="form-control" v-model="searchHKinfo.problem" @change="searchHk">
+													<option value="" selected="selected">故障现象</option>
+													<option v-bind:value="item" v-for="item in hkerrshow">{{item}}</option>
+												</select>
+											</th>
+											<th>详细现象</th>
+											<th>
+												<select class="form-control" v-model="searchHKinfo.repairStatus" @change="searchHk">
+													<option value="" selected="selected">故障状态</option>
+													<option value="0">未修复</option>
+													<option value="1">已修复未确认</option>
+												</select>
+											</th>
+											<th>
+												<select class="form-control" v-model="searchHKinfo.company"  @change="searchHk">
+													<option value="" selected="selected">维护单位</option>									
+													<option v-bind:value="orgitem.orgname" v-for="orgitem in hkxjcountys">{{orgitem.orgname}}</option>
+												</select>
+											</th>
+											<th>
+												<select class="form-control" v-model="searchHKinfo.reason" @change="searchHk">
+													<option value="" selected="selected">故障原因</option>
+													<option  v-bind:value="item" v-for="item in hkerrreason">{{item}}</option>
+												</select>
+											</th>
+											<th>故障详细原因</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="searchditem in searchHKinfos" style="font-size: small; cursor: pointer" 
+											v-on:dblclick="queryAimRecord(searchditem.deviceSn)">
+											<td>{{searchditem.incidentDevname}}</td>
+											<td>{{searchditem.incidentProblem}}</td>
+											<td>{{searchditem.incidentSubproblem}}</td>
+											<td>{{searchditem.incidentRepairStatus}}</td>
+											<td>{{searchditem.incidentWarrintyCompany}}</td>
+											<td>{{searchditem.incidentReason}}</td>
+											<td>{{searchditem.incidentReasonNote}}</td>
+										</tr>
+									</tbody>
+								</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 							</div>
 						</div>
@@ -1118,8 +1202,9 @@
 									<tr>
 										<td class="col-xs-2 col-sm-2">详细原因</td>
 										<td class="col-xs-10 col-sm-10">
-											<label class="radio-inline col-xs-3" v-for="errlist in hkxjerrclass" >
-													<input type="radio" name="optionsRadiosinline" v-bind:value="errlist" v-model="hkdevinfo.pointerrsubreason"> {{errlist}}
+											<label class="radio-inline col-xs-3" v-for="errlist in hkxjerrclass">
+												<input type="radio" name="optionsRadiosinline" v-bind:value="errlist" v-model="hkdevinfo.pointerrsubreason">
+												{{errlist}}
 											</label>
 										</td>
 									</tr>
