@@ -58,4 +58,9 @@ public class HkIncidentServerImpl implements HkIncidentServer {
     public List<HkIncident> searchHkIncidentBySomeFiled(String problem, String repairStatus, String company, String reason) {
         return hkic.searchHkIncidentBySomeFiled(problem,repairStatus,company,reason);
     }
+
+    @Override
+    public HkIncident selectBySN(String deviceSn) {
+        return hkic.selectBySN(deviceSn);
+    }
 }

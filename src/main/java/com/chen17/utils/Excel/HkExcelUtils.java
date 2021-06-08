@@ -1,16 +1,21 @@
 package com.chen17.utils.Excel;
 
 import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.Sheet;
 import com.chen17.domain.Dayerrorwork;
 import com.chen17.domain.HkDeviceList;
+import com.chen17.domain.HkIncident;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
  * @author yd
@@ -47,4 +52,51 @@ public class HkExcelUtils {
             return null;
         }
     }
+
+    public static void exportToIncidentExcelLocal(OutputStream aimOutputStream, List<HkIncident> excelData ) throws IOException {
+        ExcelWriter excelWriter = EasyExcelFactory.getWriter(aimOutputStream);
+        Sheet sheet = new Sheet(1,0,HkIncident.class);
+        sheet.setSheetName("导出");
+        excelWriter.write(excelData,sheet);
+        excelWriter.finish();
+    }
+
+    public static void exportToDevListExcelLocal(OutputStream aimOutputStream, List<HkDeviceList> excelData ) throws IOException {
+        ExcelWriter excelWriter = EasyExcelFactory.getWriter(aimOutputStream);
+        Sheet sheet = new Sheet(1,0,HkDeviceList.class);
+        sheet.setSheetName("导出");
+        excelWriter.write(excelData,sheet);
+        excelWriter.finish();
+    }
+
+    public static void exportToExcelOnline(HttpServletResponse response , Map<String,List<HkIncident>> excelData ) throws IOException {
+        HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
+
+        for(String sheetname : excelData.keySet()){
+
+            HSSFSheet hssfSheet = hssfWorkbook.createSheet(sheetname);
+            HSSFRow indexrow = hssfSheet.createRow(0);
+            indexrow.setHeight(TitleMap.dealColHeightshort(33));
+            indexrow.createCell(0).setCellValue("故障SN");
+            indexrow.createCell(1).setCellValue("故障位置");
+            indexrow.createCell(2).setCellValue("故障现象");
+            indexrow.createCell(3).setCellValue("详细现象");
+            indexrow.createCell(4).setCellValue("故障备注");
+            indexrow.createCell(5).setCellValue("检测时间");
+            indexrow.createCell(6).setCellValue("维保单位");
+            indexrow.createCell(7).setCellValue("故障状态");
+            indexrow.createCell(8).setCellValue("反馈原因");
+            indexrow.createCell(9).setCellValue("原因备注");
+
+        }
+
+
+        hssfWorkbook.write(response.getOutputStream());
+        hssfWorkbook.close();
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode("海康故障点位导出.xlsx", "UTF-8"));
+        response.flushBuffer();
+    }
+
+
 }

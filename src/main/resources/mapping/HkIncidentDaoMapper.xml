@@ -61,6 +61,15 @@
     order by Incident_DevName asc
   </select>
 
+  <select id="selectBySN" resultMap="BaseResultMap">
+
+    select
+    <include refid="Base_Column_List" />
+    from hk_incident
+    where DEVICE_SN = #{deviceSn,jdbcType=INTEGER}
+
+  </select>
+
   <delete id="deleteBySN" parameterType="java.lang.String">
       delete from hk_incident
       where DEVICE_SN = #{deviceSn,jdbcType=VARCHAR}

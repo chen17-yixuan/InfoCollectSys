@@ -40,14 +40,23 @@ public class HkDeviceList extends BaseRowModel implements Serializable  {
     private String deviceArea;
 
     /**
-     * 1:高优先级；2，普通优先级
+     * 1:正常；2，异常； 0.未巡检
      */
+
     private Object deviceIspriority;
 
     /**
      * 巡检时间
      */
     private Date searchDatatime;
+
+    @ExcelProperty(value = {"状态分类"} , index = 5)
+    private String problem;
+    @ExcelProperty(value = {"详细原因"} , index = 6)
+    private String subproblem;
+    @ExcelProperty(value = {"问题备注"} , index = 7)
+    private String problemnote;
+
 
     private static final long serialVersionUID = 1L;
 }

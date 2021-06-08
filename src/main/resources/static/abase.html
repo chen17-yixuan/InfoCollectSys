@@ -64,16 +64,16 @@
 					<!-- 选项卡开始 -->
 					<div class="tabbable" id="tabs-103786">
 						<ul class="nav nav-tabs">
-							<li>
-								<a href="#panel-264891" data-toggle="tab">早间任务</a>
-							</li>
-							<li>
-								<a href="#panel-879448" data-toggle="tab">下午任务</a>
-							</li>
-							<li class="active">
-								<a href="#panel-879446" data-toggle="tab">全局搜索</a>
-							</li>
-							<li>
+<!--							<li>-->
+<!--								<a href="#panel-264891" data-toggle="tab">早间任务</a>-->
+<!--							</li>-->
+<!--							<li>-->
+<!--								<a href="#panel-879448" data-toggle="tab">下午任务</a>-->
+<!--							</li>-->
+<!--							<li class="active">-->
+<!--								<a href="#panel-879446" data-toggle="tab">全局搜索</a>-->
+<!--							</li>-->
+							<li  class="active">
 								<a href="#panel-8794S" data-toggle="tab">海康巡检</a>
 							</li>
 							<li>
@@ -167,7 +167,7 @@
 								</p>
 							</div>
 
-							<div class="tab-pane  active" id="panel-879446">
+							<div class="tab-pane" id="panel-879446">
 								<div class="col-md-12" style="text-align: center; background-color: #9d9d9d">
 									<div class="col-md-12">
 										<h3 align="center"> 选择下方搜索框内容进行查找,双击修改信息</h3>
@@ -347,7 +347,7 @@
 							</div>
 
 
-							<div class="tab-pane" id="panel-8794S">
+							<div class="tab-pane active" id="panel-8794S">
 
 								<!-- 海康视频巡检 -->
 								<div class="col-md-12" style="margin-top: 2px">
@@ -393,7 +393,7 @@
 								<table class="table table-hover">
 									<thead>
 										<tr>
-											<th>监控点名称&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-success">下载右侧选择=></button></th>
+											<th>监控点名称&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-success" @click="downloadSelectedExcel()">下载右侧选择=></button></th>
 											<th>
 												<select class="form-control" v-model="searchHKinfo.problem" @change="searchHk">
 													<option value="" selected="selected">故障现象</option>
@@ -409,23 +409,22 @@
 												</select>
 											</th>
 											<th>
-												<select class="form-control" v-model="searchHKinfo.company"  @change="searchHk">
-													<option value="" selected="selected">维护单位</option>									
+												<select class="form-control" v-model="searchHKinfo.company" @change="searchHk">
+													<option value="" selected="selected">维护单位</option>
 													<option v-bind:value="orgitem.orgname" v-for="orgitem in hkxjcountys">{{orgitem.orgname}}</option>
 												</select>
 											</th>
 											<th>
 												<select class="form-control" v-model="searchHKinfo.reason" @change="searchHk">
 													<option value="" selected="selected">故障原因</option>
-													<option  v-bind:value="item" v-for="item in hkerrreason">{{item}}</option>
+													<option v-bind:value="item" v-for="item in hkerrreason">{{item}}</option>
 												</select>
 											</th>
 											<th>故障详细原因</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr v-for="searchditem in searchHKinfos" style="font-size: small; cursor: pointer" 
-											v-on:dblclick="queryAimRecord(searchditem.deviceSn)">
+										<tr v-for="searchditem in searchHKinfos" style="font-size: small; cursor: pointer" v-on:dblclick="queryAimRecord(searchditem.deviceSn)">
 											<td>{{searchditem.incidentDevname}}</td>
 											<td>{{searchditem.incidentProblem}}</td>
 											<td>{{searchditem.incidentSubproblem}}</td>
@@ -1118,6 +1117,115 @@
 							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
 							</button>
 							<button type="button" class="btn btn-primary" v-on:click="insertNewRec">
+								提交更改
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal -->
+			</div>
+
+
+
+			<div class="modal fade" id="updateSingleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabelss"
+			 aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								&times;
+							</button>
+							<h4 class="modal-title" id="updateSingleModalh">
+								海康平台信息状态修改
+							</h4>
+						</div>
+						<div class="modal-body">
+
+							<table class="table">
+								<thead>
+									<tr>
+										<th>属性</th>
+										<th>信息</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>故障SN:</td>
+										<td>
+											{{searchSingleHKinfo.deviceSn}}
+										</td>
+									</tr>
+									<tr>
+										<td>故障位置:</td>
+										<td>
+											{{searchSingleHKinfo.incidentDevname}}
+										</td>
+									</tr>
+									<tr>
+										<td>故障现象:</td>
+										<td>
+											{{searchSingleHKinfo.incidentProblem}}
+										</td>
+									</tr>
+									<tr>
+										<td>详细现象:</td>
+										<td>
+											{{searchSingleHKinfo.incidentSubproblem}}
+										</td>
+									</tr>
+									<tr>
+										<td>故障备注:</td>
+										<td>
+											{{searchSingleHKinfo.incidentNote}}
+										</td>
+									</tr>
+									<tr>
+										<td>检测时间:</td>
+										<td>
+											{{searchSingleHKinfo.incidentFindtime}}
+										</td>
+									</tr>
+									<tr>
+										<td>维保单位</td>
+										<td>
+											{{searchSingleHKinfo.incidentWarrintyCompany}}
+										</td>
+									</tr>
+									<tr>
+										<td>故障状态:</td>
+										<td>
+											<select class="form-control" v-model="searchSingleHKinfo.incidentRepairStatus">
+												<option value="未修复">未修复</option>
+												<option value="已修复未确认">已修复未确认</option>
+											</select>
+										</td>
+
+									</tr>
+									<tr>
+										<td>反馈原因:</td>
+										<td>
+											<select class="form-control" v-model="searchSingleHKinfo.incidentReason">
+												<option v-bind:value="item" v-for="item in hkerrreason">{{item}}</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td>原因备注:</td>
+										<td>
+											<textarea v-model="searchSingleHKinfo.incidentReasonNote" class="col-md-12 col-xs-12 col-sm-12">
+
+											</textarea>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="modal-footer">
+							<!--                    <button type="button" class="btn btn-danger" v-on:click="deletebyids(errinfo.errortableId)">-->
+							<!--                        删除该记录-->
+							<!--                    </button>-->
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+							<button type="button" class="btn btn-primary" v-on:click="updateHicBySn()">
 								提交更改
 							</button>
 						</div>

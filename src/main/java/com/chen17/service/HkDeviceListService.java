@@ -28,6 +28,8 @@ public interface HkDeviceListService {
 
     int deleteByPrimaryKey(String deviceSn);
 
+    List<HkDeviceList> selectAllByORG(String ORGName);
+
 
 
 }

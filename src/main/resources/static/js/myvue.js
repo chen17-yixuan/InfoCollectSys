@@ -28,10 +28,23 @@ var vm = new Vue({
 		checkedids: [],
 		errortableRequestTimeShow: null,
 		errortableRequestTimeCache: null,
-		
+		searchSingleHKinfo:{
+			incidentId :null,
+			deviceSn : null,
+			incidentDevname : null,
+			incidentProblem : null,
+			incidentSubproblem : null,
+			incidentNote : null,
+			incidentFindtime : null,
+			incidentWarrintyCompany : null,
+			incidentRepairStatus : null,
+			incidentReason : null,
+			incidentReasonNote : null
+		},
+
 		hkerrshow:["正常","标注错误","录像问题","异物遮挡","卡顿","不在线"],
-		hkerrreason:["停运","供电","设备硬件问题","设备问题无法修复","网络(广电)","网络(联通)","网络(移动)","正在维修（未反馈）"],
-		
+		hkerrreason:["广宁（未出保）","华迪（未出保）","三棱（未出保）","易华录（未出保）","停运（无停运报告）","停运（有停运报告）","供电","设备硬件问题","设备问题无法修复","网络(广电)","网络(联通)","网络(移动)","正在维修（未反馈）"],
+
 		errinfo: {
 			errortableId: null,
 			errortableCounty: null,
@@ -58,7 +71,7 @@ var vm = new Vue({
 			pointerrsubreason: null,
 			pointnote: null
 		},
-		
+
 		searchHKinfo: {
 			pointid: null,
 			pointname: null,
@@ -68,13 +81,12 @@ var vm = new Vue({
 
 		hkdeverrclassifier: {
 			normal: ["正常"],
-			offline: ["不在线", "海康平台无法取流"],
+			offline: ["不在线"],
 			delay: ["卡顿", "海康平台无图像"],
-			record: ["视频花屏", "视频白屏", "视频暗", "无录像回放", "录像回放查询失败"],
+			record: ["视频花屏", "视频白屏",  "视频模糊", "视频暗", "无录像回放",  "机位偏移", "录像回放查询失败"],
 			cover: ["树叶遮挡", "路牌遮挡", "红绿灯遮挡", "灰尘多"],
 			mark: ["字符叠加缺失", "字符叠加位置", "路口名称与监控点名称不一致", "日期格式", "日期位置"]
 		}
-
 	},
 
 	beforeMount() {
@@ -112,7 +124,7 @@ var vm = new Vue({
 						url: "/daywork/deletetablevalue",
 						data: formData,
 						headers: {
-							//文件头必须写，这是网址头
+							//文件头必须写，这是网址
 							'Content-Type': 'application/x-www-form-urlencoded'
 						}
 					})
@@ -454,16 +466,16 @@ var vm = new Vue({
 					console.log("失败");
 				});
 		},
-		
+
 		searchHk: function() {
-		
+
 			let formData = new FormData();
 			//file对应传过去的参数
 			formData.append('problem', this.searchHKinfo.problem);
 			formData.append('repairStatus',this.searchHKinfo.repairStatus);
 			formData.append('company', this.searchHKinfo.company);
 			formData.append('reason', this.searchHKinfo.reason);
-		
+
 			axios({
 					method: 'post',
 					url: "/hkabout/searchByFileds",
@@ -476,18 +488,95 @@ var vm = new Vue({
 				.then(res => {
 					console.log(res.data);
 					this.searchHKinfos = res.data;
-					
+
 					console.log(this.searchHKinfos);
 				})
 				.catch(err => {
 					console.log("失败");
 				});
 		},
-		
-		queryAimRecord: function(devsn) {
-		
-			alert(devsn);
+
+		downloadSelectedExcel: function() {
+
+		window.location.href = "/hkabout/downloadSelectedExcel?problem=" + this.searchHKinfo.problem + "&repairStatus=" + this.searchHKinfo.repairStatus +
+			"&company=" + this.searchHKinfo.company + "&reason=" + this.searchHKinfo.reason;
+
 		},
+		
+		downloadSelectedOrg: function(deviceOrg) {
+		
+		window.location.href = "/hkabout/downloadSelectedOrgGroup?deviceOrg=" + deviceOrg;
+		
+		},
+
+		queryAimRecord: function(devsn) {
+
+			$('#updateSingleModal').modal('show');
+
+
+			let formData = new FormData();
+			//file对应传过去的参数
+			formData.append('pointid', devsn);
+
+
+			axios({
+					method: 'post',
+					url: "/hkabout/searchHicBySn",
+					data: formData,
+					headers: {
+						//文件头必须写，这是网址头
+						'Content-Type': 'application/x-www-form-urlencoded'
+					}
+				})
+				.then(res => {
+					console.log(res.data);
+
+					this.searchSingleHKinfo = res.data;
+
+					this.searchSingleHKinfo.incidentFindtime = this.dateFilter(res.data.incidentFindtime);
+
+
+
+					if(res.data.incidentRepairStatus == "0"){
+						this.searchSingleHKinfo.incidentRepairStatus = "未修复";
+					}else{
+						this.searchSingleHKinfo.incidentRepairStatus = "已修复待确认";
+					}
+					console.log(this.searchSingleHKinfo)
+				})
+				.catch(err => {
+					console.log("失败");
+				});
+		},
+
+		updateHicBySn: function() {
+
+			let formData = new FormData();
+			//file对应传过去的参数
+			formData.append('incidentId', this.searchSingleHKinfo.incidentId);
+			formData.append('incidentRepairStatus', this.searchSingleHKinfo.incidentRepairStatus);
+			formData.append('incidentReason', this.searchSingleHKinfo.incidentReason);
+			formData.append('incidentReasonNote', this.searchSingleHKinfo.incidentReasonNote);
+
+			axios({
+					method: 'post',
+					url: "/hkabout/updateHicBySn",
+					data: formData,
+					headers: {
+						//文件头必须写，这是网址头
+						'Content-Type': 'application/x-www-form-urlencoded'
+					}
+				})
+				.then(res => {
+					console.log(res.data);
+					$('#updateSingleModal').modal('hide');
+					this.searchHk();
+				})
+				.catch(err => {
+					console.log("失败");
+				});
+		},
+
 
 		//下面继续写方法
 		//检查在数据库中IP的通断并且删除通了的数据
@@ -586,7 +675,7 @@ var vm = new Vue({
 		},
 
 		getNextSingleCountyRecord: function() {
-			
+
 			this.errpointnote = "";
 			if (this.mode != "err") {
 				if (this.hkdevinfo.pointerrsubreason == null || this.hkdevinfo.pointerrmainreason == null) {

@@ -32,4 +32,6 @@ public interface HkDeviceListDao {
     HkDeviceList selectByORGLimitOne(String ORGName);
 
     int truncateList();
+
+    List<HkDeviceList> selectAllByORG(String ORGName);
 }

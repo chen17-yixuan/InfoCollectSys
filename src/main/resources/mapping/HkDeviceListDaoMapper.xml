@@ -48,6 +48,17 @@
     limit 1
 
   </select>
+
+  <select id="selectAllByORG" parameterType="java.lang.String" resultMap="BaseResultMap">
+
+    select
+    <include refid="Base_Column_List" />
+    from hk_device_list
+    where DEVICE_ORG = #{deviceOrg,jdbcType=VARCHAR}
+    AND DEVICE_ISPRIORITY = '0'
+
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from hk_device_list
     where DEVICE_SN = #{deviceSn,jdbcType=VARCHAR}

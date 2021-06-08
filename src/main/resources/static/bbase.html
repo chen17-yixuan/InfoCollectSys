@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="UTF-8">
+		<title>自运维系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- 引入 Bootstrap -->
+		<link href="css/bootstrap.css" rel="stylesheet">
+
+		<!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+		<script src="js/jquery.js"></script>
+		<!-- 包括所有已编译的插件 -->
+		<script src="js/bootstrap.min.js"></script>
+
+		<!-- VUE -->
+		<script src="js/vue.min.js"></script>
+		<script src="js/myvue.js"></script>
+		<script src="js/axios.min.js"></script>
+
+	</head>
+	<body>
+		<div class="container-fluid" id="vue_det">
+			<div class="row-fluid">
+				<div class="span12">
+					<!-- 导航栏 -->
+					<nav class="navbar navbar-default" role="navigation">
+						<div class="container-fluid">
+							<div class="navbar-header">
+								<a class="navbar-brand" href="#">系统</a>
+							</div>
+						</div>
+					</nav>
+					<!-- 导航栏结束 -->
+					<!-- 选项卡开始 -->
+					<div class="tabbable" id="tabs-103786">
+						<ul class="nav nav-tabs">
+							<li  class="active">
+								<a href="#panel-8794S" data-toggle="tab">海康巡检</a>
+							</li>
+							<li>
+								<a href="#panel-87977S" data-toggle="tab">大队反馈</a>
+							</li>
+						</ul>
+						<div class="tab-content" style="font-size: large;">
+							<div class="tab-pane active" id="panel-8794S">
+
+								<!-- 海康视频巡检 -->
+								<div class="col-md-12" style="margin-top: 2px">
+
+									<div class="col-md-6 col-sm-6">
+										<button type="button" class="btn btn-primary btn-lg btn-block" @click="showuploadHKAllDev()">导入数据</button>
+									</div>
+
+									<div class="col-md-6 col-sm-6">
+										<button type="button" class="btn btn-primary btn-lg btn-block" @click="refreashHkCounty()">刷新数据</button>
+									</div>
+
+									<div class="col-md-6 col-sm-6">
+										<button type="button" class="btn btn-primary btn-lg btn-block" @click="getSingleCountyRecord('err')">异常问题巡检（昨日）</button>
+									</div>
+									
+									<div class="col-md-6 col-sm-6">
+										<button type="button" class="btn btn-primary btn-lg btn-block" @click="">上传巡检文件（当日）</button>
+									</div>
+								</div>
+
+								<table class="table table-hover text-center">
+									<thead>
+										<tr>
+											<th class="col-md-3 col-sm-3 text-center ">组织名称</th>
+											<th class="col-md-3 col-sm-3 text-center">巡检进度(正常/故障/未巡检)</th>
+											<th class="col-md-3 col-sm-3 text-center">完成率</th>
+											<th class="col-md-3 col-sm-3 text-center">下载任务</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="item in hkxjcountys" v-on:dblclick="getSingleCountyRecord(item.orgname)">
+											<td class="col-md-3 col-sm-3">{{item.orgname}}</td>
+											<td class="col-md-3 col-sm-3">{{item.donenum}}/{{item.allnum}}（{{item.nornum}}/{{item.errnum}}/{{item.allnum-item.nornum-item.errnum}}）</td>
+											<td class="col-md-3 col-sm-3">{{item.rate}}</td>
+											<td class="col-md-3 col-sm-3"><button type="button" class="btn btn-default" @click="downloadSelectedOrg(item.orgname)">下载待巡检文件</button></td>
+										</tr>
+
+									</tbody>
+								</table>
+
+							</div>
+
+							<div class="tab-pane" id="panel-87977S">
+
+								<!-- 海康大队反馈 -->
+
+
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th>监控点名称&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-success" @click="downloadSelectedExcel()">下载右侧选择=></button></th>
+											<th>
+												<select class="form-control" v-model="searchHKinfo.problem" @change="searchHk">
+													<option value="" selected="selected">故障现象</option>
+													<option v-bind:value="item" v-for="item in hkerrshow">{{item}}</option>
+												</select>
+											</th>
+											<th>详细现象</th>
+											<th>
+												<select class="form-control" v-model="searchHKinfo.repairStatus" @change="searchHk">
+													<option value="" selected="selected">故障状态</option>
+													<option value="0">未修复</option>
+													<option value="1">已修复未确认</option>
+												</select>
+											</th>
+											<th>
+												<select class="form-control" v-model="searchHKinfo.company" @change="searchHk">
+													<option value="" selected="selected">维护单位</option>
+													<option v-bind:value="orgitem.orgname" v-for="orgitem in hkxjcountys">{{orgitem.orgname}}</option>
+												</select>
+											</th>
+											<th>
+												<select class="form-control" v-model="searchHKinfo.reason" @change="searchHk">
+													<option value="" selected="selected">故障原因</option>
+													<option v-bind:value="item" v-for="item in hkerrreason">{{item}}</option>
+												</select>
+											</th>
+											<th>故障详细原因</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="searchditem in searchHKinfos" style="font-size: small; cursor: pointer" v-on:dblclick="queryAimRecord(searchditem.deviceSn)">
+											<td>{{searchditem.incidentDevname}}</td>
+											<td>{{searchditem.incidentProblem}}</td>
+											<td>{{searchditem.incidentSubproblem}}</td>
+											<td>{{searchditem.incidentRepairStatus}}</td>
+											<td>{{searchditem.incidentWarrintyCompany}}</td>
+											<td>{{searchditem.incidentReason}}</td>
+											<td>{{searchditem.incidentReasonNote}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<!-- 切换选项卡结束 -->
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade" id="updateSingleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabelss"
+			 aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								&times;
+							</button>
+							<h4 class="modal-title" id="updateSingleModalh">
+								海康平台信息状态修改
+							</h4>
+						</div>
+						<div class="modal-body">
+
+							<table class="table">
+								<thead>
+									<tr>
+										<th>属性</th>
+										<th>信息</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>故障SN:</td>
+										<td>
+											{{searchSingleHKinfo.deviceSn}}
+										</td>
+									</tr>
+									<tr>
+										<td>故障位置:</td>
+										<td>
+											{{searchSingleHKinfo.incidentDevname}}
+										</td>
+									</tr>
+									<tr>
+										<td>故障现象:</td>
+										<td>
+											{{searchSingleHKinfo.incidentProblem}}
+										</td>
+									</tr>
+									<tr>
+										<td>详细现象:</td>
+										<td>
+											{{searchSingleHKinfo.incidentSubproblem}}
+										</td>
+									</tr>
+									<tr>
+										<td>故障备注:</td>
+										<td>
+											{{searchSingleHKinfo.incidentNote}}
+										</td>
+									</tr>
+									<tr>
+										<td>检测时间:</td>
+										<td>
+											{{searchSingleHKinfo.incidentFindtime}}
+										</td>
+									</tr>
+									<tr>
+										<td>维保单位</td>
+										<td>
+											{{searchSingleHKinfo.incidentWarrintyCompany}}
+										</td>
+									</tr>
+									<tr>
+										<td>故障状态:</td>
+										<td>
+											<select class="form-control" v-model="searchSingleHKinfo.incidentRepairStatus">
+												<option value="未修复">未修复</option>
+												<option value="已修复未确认">已修复未确认</option>
+											</select>
+										</td>
+
+									</tr>
+									<tr>
+										<td>反馈原因:</td>
+										<td>
+											<select class="form-control" v-model="searchSingleHKinfo.incidentReason">
+												<option v-bind:value="item" v-for="item in hkerrreason">{{item}}</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td>原因备注:</td>
+										<td>
+											<textarea v-model="searchSingleHKinfo.incidentReasonNote" class="col-md-12 col-xs-12 col-sm-12">
+
+											</textarea>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="modal-footer">
+							<!--                    <button type="button" class="btn btn-danger" v-on:click="deletebyids(errinfo.errortableId)">-->
+							<!--                        删除该记录-->
+							<!--                    </button>-->
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+							<button type="button" class="btn btn-primary" v-on:click="updateHicBySn()">
+								提交更改
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal -->
+			</div>
+
+
+			<!-- 模态框（Modal）海康巡检区县内模块框 -->
+			<div class="modal fade" id="IPmyModalhkxj" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+							</button>
+							<h4 class="modal-title" id="myModalLabelhkxj">
+								单个点位数据
+							</h4>
+						</div>
+						<div class="modal-body">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>属性</th>
+										<th>信息:{{errpointnote}}</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>监控点编号</td>
+										<td>{{hkdevinfo.pointid}}</td>
+									</tr>
+									<tr>
+										<td>监控点名称</td>
+										<td><input type="text" id="jkdname" style="border: white ; width: 100%;" value="点击下一步开始任务"></td>
+									</tr>
+									<tr>
+										<td>主原因</td>
+										<td>
+											<!-- 表示一个成功的或积极的动作 -->
+											<button type="button" class="btn btn-success" v-on:click="doex('normal')">正常</button>
+											<!-- 标准的按钮 -->
+											<button type="button" class="btn btn-default" v-on:click="doex('mark')">标注错误</button>
+											<!-- 提供额外的视觉效果，标识一组按钮中的原始动作 -->
+											<button type="button" class="btn btn-primary" v-on:click="doex('record')">录像问题</button>
+											<!-- 信息警告消息的上下文按钮 -->
+											<button type="button" class="btn btn-info" v-on:click="doex('cover')">异物遮挡</button>
+											<!-- 表示应谨慎采取的动作 -->
+											<button type="button" class="btn btn-warning" v-on:click="doex('delay')">卡顿</button>
+											<!-- 表示一个危险的或潜在的负面动作 -->
+											<button type="button" class="btn btn-danger" v-on:click="doex('offline')">不在线</button>
+										</td>
+									</tr>
+									<tr>
+										<td class="col-xs-2 col-sm-2">详细原因</td>
+										<td class="col-xs-10 col-sm-10">
+											<label class="radio-inline col-xs-3" v-for="errlist in hkxjerrclass">
+												<input type="radio" name="optionsRadiosinline" v-bind:value="errlist" v-model="hkdevinfo.pointerrsubreason">
+												{{errlist}}
+											</label>
+										</td>
+									</tr>
+									<tr>
+										<td>备注</td>
+										<td>
+											<textarea class="col-md-12 col-sm-12" placeholder="填入详细原因" v-model="hkdevinfo.pointnote">
+
+											</textarea>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+
+							<button type="button" class="btn btn-default" v-on:click="getNextSingleCountyRecord()">下一个
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+			
+			<!-- 上传海康所有设备的模态框 -->
+			<div class="modal fade" id="uploadHKAllDev" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<!-- 上传文件的表单 -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+							</button>
+							<h4 class="modal-title" id="myModalLabelHKAllDev">
+								请选择上传的文件
+							</h4>
+						</div>
+						<div class="modal-body" style="text-align: center;">
+							请注意：请导入直接从海康导出的所有点位数据
+							<br>
+							<hr>
+							<h2>{{uploadstate}}</h2>
+							<hr>
+							<br>
+							<input id="fileunewploadHKAllDev" type="file" name="fileHKAllDev" class="center-block btn-primary btn-lg"></input>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+							<button type="button" class="btn btn-primary" v-on:click="upnewfileHKAllDev">
+								上传文件
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+
+	</div>
+				<!-- VUE -->
+				<script src="js/vue.min.js"></script>
+				<script src="js/myvue.js"></script>
+				<script src="js/axios.min.js"></script>
+</html>

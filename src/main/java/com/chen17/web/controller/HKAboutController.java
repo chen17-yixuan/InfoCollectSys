@@ -24,11 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author yd
@@ -174,8 +172,6 @@ public class HKAboutController {
         if(company.equals("undefined")){company = null;}
         if(reason.equals("undefined")){reason = null;}
 
-        System.out.println(problem+"-----------"+repairStatus);
-
         List<HkIncident> hkIncidents = his.searchHkIncidentBySomeFiled(problem, repairStatus, company, reason);
         List<HkIncident> hkIncidentM = new ArrayList<>();
         for (HkIncident hkIncident : hkIncidents){
@@ -223,4 +219,91 @@ public class HKAboutController {
         }
         return null;
     }
+
+    @RequestMapping("/searchHicBySn")
+    public String searchHicBySn(HttpServletRequest request){
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+        String pointid = multipartRequest.getParameter("pointid");
+
+        HkIncident hkIncident = his.selectBySN(pointid);
+
+        return JacksonUtil.toJSon(hkIncident);
+    }
+
+    @RequestMapping("/updateHicBySn")
+    public String updateHicBySn(HttpServletRequest request){
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+        String incidentId = multipartRequest.getParameter("incidentId");
+        String incidentRepairStatus = multipartRequest.getParameter("incidentRepairStatus");
+        String incidentReason = multipartRequest.getParameter("incidentReason");
+        String incidentReasonNote = multipartRequest.getParameter("incidentReasonNote");
+
+        HkIncident hkIncident = new HkIncident();
+        hkIncident.setIncidentId(Integer.parseInt(incidentId));
+
+        if(incidentRepairStatus.equals("未修复")){
+            incidentRepairStatus = "0";
+        }else {
+            incidentRepairStatus = "1";
+        }
+        hkIncident.setIncidentRepairStatus(incidentRepairStatus);
+        hkIncident.setIncidentReason(incidentReason);
+        hkIncident.setIncidentReasonNote(incidentReasonNote);
+
+        if(incidentReasonNote.equals("null")){
+            incidentReasonNote = "";
+            hkIncident.setIncidentReasonNote(incidentReasonNote);
+        }
+
+        his.updateByPrimaryKeySelective(hkIncident);
+
+        return "成功";
+    }
+
+    @RequestMapping("/downloadSelectedExcel")
+    public String downloadSelectedExcel(HttpServletResponse response , String problem , String repairStatus,String company,String reason) throws IOException {
+
+        if(problem.equals("undefined")){problem = null;}
+        if(repairStatus.equals("undefined")){repairStatus = null;}
+        if(company.equals("undefined")){company = null;}
+        if(reason.equals("undefined")){reason = null;}
+
+        List<HkIncident> hkIncidents = his.searchHkIncidentBySomeFiled(problem, repairStatus, company, reason);
+        List<HkIncident> hkIncidentM = new ArrayList<>();
+        for (HkIncident hkIncident : hkIncidents){
+            if(hkIncident.getIncidentRepairStatus().equals("0")){
+                hkIncident.setIncidentRepairStatus("未修复");
+            }else {
+                hkIncident.setIncidentRepairStatus("已修复待确认");
+            }
+            if(hkIncident.getIncidentReasonNote()==null){
+                hkIncident.setIncidentReasonNote("");
+            }
+            if(hkIncident.getIncidentNote().equals("null")){
+                hkIncident.setIncidentNote("");
+            }
+            hkIncidentM.add(hkIncident);
+        }
+        response.setContentType("application/octet-stream;charset=utf-8");
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("所有故障点位","utf-8") + ".xlsx");
+        response.setHeader("Pragma", "public");
+        HkExcelUtils.exportToIncidentExcelLocal(response.getOutputStream(),hkIncidentM);
+        return null;
+    }
+
+    @RequestMapping("/downloadSelectedOrgGroup")
+    public String downloadSelectedOrgGroup(HttpServletResponse response , String deviceOrg) throws IOException {
+
+        if(deviceOrg.equals("undefined")){deviceOrg = null;}
+        System.out.println(deviceOrg);
+        List<HkDeviceList> hkDeviceLists = hks.selectAllByORG(deviceOrg);
+        response.setContentType("application/octet-stream;charset=utf-8");
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(deviceOrg+"所有点位","utf-8") + ".xlsx");
+        response.setHeader("Pragma", "public");
+        HkExcelUtils.exportToDevListExcelLocal(response.getOutputStream(),hkDeviceLists);
+        return null;
+    }
+
 }

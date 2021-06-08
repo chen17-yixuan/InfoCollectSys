@@ -21,6 +21,8 @@ public interface HkIncidentDao {
 
     HkIncident selectByPrimaryKey(Integer incidentId);
 
+    HkIncident selectBySN(String deviceSn);
+
     int deleteBySN(String deviceSn);
 
     int updateByPrimaryKeySelective(HkIncident record);

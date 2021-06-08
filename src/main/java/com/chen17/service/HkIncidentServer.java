@@ -23,4 +23,8 @@ public interface HkIncidentServer {
     int updateBySN(HkIncident record);
 
     List<HkIncident> searchHkIncidentBySomeFiled(String problem, String repairStatus,String company,String reason);
+
+    HkIncident selectBySN(String deviceSn);
+
+
 }

@@ -104,6 +104,5 @@ public class TemporaryWorkExcelUtils {
         httpServletResponse.setContentType("application/octet-stream");
         httpServletResponse.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
         httpServletResponse.flushBuffer();
-        return;
     }
 }

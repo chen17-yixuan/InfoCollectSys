@@ -80,4 +80,9 @@ public class HkDeviceListServiceImpl implements HkDeviceListService {
         return hkDeviceListDao.deleteByPrimaryKey(deviceSn);
     }
 
+    @Override
+    public List<HkDeviceList> selectAllByORG(String ORGName) {
+        return hkDeviceListDao.selectAllByORG(ORGName);
+    }
+
 }
