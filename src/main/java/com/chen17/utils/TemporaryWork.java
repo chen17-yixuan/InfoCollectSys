@@ -54,12 +54,12 @@ public class TemporaryWork {
                 propFile.createNewFile();
                 //录入初始数据
                 String propertiesPath = propFile.getAbsolutePath();
-                PropertiesUtils.writeProperties(propertiesPath, "zhangdian", "1692");
+                PropertiesUtils.writeProperties(propertiesPath, "zhangdian", "1700");
                 PropertiesUtils.writeProperties(propertiesPath, "zichuan", "1146");
                 PropertiesUtils.writeProperties(propertiesPath, "boshan", "736");
                 PropertiesUtils.writeProperties(propertiesPath, "zhoucun", "1211");
                 PropertiesUtils.writeProperties(propertiesPath, "linzi", "994");
-                PropertiesUtils.writeProperties(propertiesPath, "huantai", "1470");
+                PropertiesUtils.writeProperties(propertiesPath, "huantai", "1590");
                 PropertiesUtils.writeProperties(propertiesPath, "yiyuan", "1239");
                 PropertiesUtils.writeProperties(propertiesPath, "gaoqing", "1012");
                 PropertiesUtils.writeProperties(propertiesPath, "gaoxinqu", "1150");
